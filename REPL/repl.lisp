@@ -10,7 +10,7 @@
 ;;       (t
 ;;        (match x pattern (+ index 1))))))
 
-(defun match (x pattern &optional (index 0))
+(defun match-2 (x pattern &optional (index 0))
   (format t "x = ~a pattern = ~a index = ~a~%" x pattern index)
   (let ((plen (length pattern)))
     (when (not (= plen (length x)))
@@ -18,19 +18,47 @@
 
     (cond ((< index plen)
            (if (equal (char x index) (char pattern index))
-               (match x pattern (+ index 1))
+               (match-2 x pattern (+ index 1))
                nil))
           (t (if (= index (- plen 1)) t 'nil))))
   t
   )
+
+(defun match-3 (x pattern &optional (index 0))
+  (format t "x = ~a pattern = ~a index = ~a~%" x pattern index)
+  (let* ((xlen (length x))
+         (plen (length pattern))
+         (lenok (equal xlen plen))
+         (res nil))
+    (format t "xlen = ~a plen = ~a lenok = ~a index = ~a~%" xlen plen lenok index)
+    (when (not lenok)
+      (return-from match-3))
+    (when (>= index plen)
+      (return-from match-3))
+    (format t "After index check cx = ~a cp = ~a ~%"
+            (char x index)
+            (char pattern index)
+            )
+    (if (equal (char x index) (char pattern index))
+        (setf res t)
+        (setf res nil))
+    (format t "res = ~a~%" res)
+    (when (and res (= (+ index 1) plen))
+      (return-from match-3 t))
+    
+    (if res
+        (match-3 x pattern (+ index 1))
+        nil)))
+
+    
+                   
+      
+    
+      
+    
     
 
     
-    ;; (cond ((and (equal xc pc) (< index plen))
-    ;;        (match x pattern (+ index 1)))
-    ;;       (t
-    ;;        nil))
-    ;; t))
 
                    
 (defun do-repl (input-stream)
