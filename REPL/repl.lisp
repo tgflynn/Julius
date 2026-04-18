@@ -1,6 +1,6 @@
 
 (defparameter *CMDS* '(
-                       ("help" 0 "Displays help" nil)
+                       ( "help" 0 "Displays help" nil )
                        ( "car" 1 "Returns head of list" cl::car )
                        ( "cdr" 2 "Returns rest of list" cl::cdr )
                        ( "nth" 3 "Returns nth element of list" cl:nth )
@@ -10,6 +10,14 @@
                        ( "getf" . nil )
                        ( "setf" . nil )
                        ))
+
+(defun khelp ()
+  (let* ((rec (nth 0 *CMDS*))
+         (fun (lambda ()
+                "This is the help.")))
+    (setf (nth 3 rec) fun)
+    (funcall fun)))
+  
 
 (defun kload (path)
   (let* ((rec (nth 4 *CMDS*))
