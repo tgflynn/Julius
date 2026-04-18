@@ -1,4 +1,18 @@
 
+(defparameter *CMDS* '(
+                       ("help" 0 "Displays help" nil)
+                       ( "car" . nil )
+                       ( "cdr" . nil )
+                       ( "nth" . nil )
+                       ( "match" . nil )
+                       ( "do" . nil )
+                       ( "getf" . nil )
+                       ( "setf" . nil )
+                       ))
+
+;;; (setf (cdr (nth 0 *CMDS*)) '(0 "Displays help" nil))
+
+
 ;; (defun match-1 (x pattern &optional (index 0))
 ;;   (let ((plen (length pattern)))
     
@@ -30,7 +44,8 @@
          (plen (length pattern))
          (lenok (equal xlen plen))
          (res nil))
-    (format t "xlen = ~a plen = ~a lenok = ~a index = ~a~%" xlen plen lenok index)
+    (format t "xlen = ~a plen = ~a lenok = ~a index = ~a~%"
+            xlen plen lenok index)
     (when (not lenok)
       (return-from match-3))
     (when (>= index plen)
@@ -51,7 +66,25 @@
         nil)))
 
     
-                   
+
+(defun match-4 (x pattern &optional (index 0))
+  (let* ((xlen (length x))
+         (plen (length pattern))
+         (lenok (equal xlen plen))
+         (nexti (+ index 1)))
+    (let ((res
+           (cond ((not lenok) nil)
+                 ((>= index plen) nil)
+                 ((equal (char x index)
+                         (char pattern index))
+                  t)
+                 (t nil))))
+      (format t "index = ~a res = ~a nexti = ~a~%"
+              index res nexti)
+      (match-4 x pattern nexti)
+      )
+    nil
+    ))
       
     
       
