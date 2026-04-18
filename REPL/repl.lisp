@@ -63,11 +63,14 @@
             (compilation-speed 0)))
   (let* ((rec (nth 9 *CMDS*))
          (fun (lambda ()
-                (format nil "Dying...")
-                ;(sb-ext:save-lisp-and-die "kore.dat"))
-           )))
+                (ksleep 10000)
+                (let ((res (format nil "Dying...")))
+                  (sb-ext:save-lisp-and-die "kore.dat")
+                  res))))
     (setf (nth 3 rec) fun)
-    (funcall fun)))
+    (let ((res2 (funcall fun)))
+      (ksleep 10)
+      (format t "res2 = ~a~%" res2))))
 
 
 ;;; (setf (cdr (nth 0 *CMDS*)) '(0 "Displays help" nil))
