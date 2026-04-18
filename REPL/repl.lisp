@@ -1,14 +1,20 @@
 
 (defparameter *CMDS* '(
                        ("help" 0 "Displays help" nil)
-                       ( "car" . nil )
-                       ( "cdr" . nil )
-                       ( "nth" . nil )
+                       ( "car" 1 "Returns head of list" cl::car )
+                       ( "cdr" 2 "Returns rest of list" cl::cdr )
+                       ( "nth" 3 "Returns nth element of list" cl:nth )
+                       ( "load" 4 "Loads a Lisp source file" cl:load )
                        ( "match" . nil )
                        ( "do" . nil )
                        ( "getf" . nil )
                        ( "setf" . nil )
                        ))
+
+(defun kload (path)
+  (let* ((rec (nth 4 *CMDS*))
+         (fun (nth 3 rec)))
+    (funcall fun path)))
 
 ;;; (setf (cdr (nth 0 *CMDS*)) '(0 "Displays help" nil))
 
