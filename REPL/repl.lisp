@@ -10,6 +10,7 @@
                        ( "match" 7 "Matches a string" nil )
                        ( "do" 8 "do loop" cl::do )
                        ( "die" 9 "Save image and exit" nil )
+                       ( "kcore" 10 "Save image" nil )
                        ))
 
 (defun khelp ()
@@ -18,19 +19,6 @@
                 "This is the help.")))
     (setf (nth 3 rec) fun)
     (funcall fun)))
-  
-(defun kload (path)
-  (declare (optimize
-            (safety 0)
-            (speed 0)
-            (space 0)
-            (debug 0)
-            (compilation-speed 0)))
-
-  ;(declaim ((sb-ext::muffle-conditions sb-ext::compiler-note)))
-  (let* ((rec (nth 4 *CMDS*))
-         (fun (nth 3 rec)))
-    (funcall fun path)))
 
 (defun ksleep (msec)
   ;; (declare (optimize
@@ -47,6 +35,39 @@
          (format t "var = ~a units-per-msec = ~a units-per-usec = ~a~%"
                  var units-per-msec units-per-usec)))
     ))
+
+(defun kcore ()
+  (declare (optimize
+            (safety 0)
+            (speed 0)
+            (space 0)
+            (debug 0)
+            (compilation-speed 0)))
+  (let* ((rec (nth 10 *CMDS*))
+         (fun (lambda ()
+                (ksleep 10000)
+                (let ((res (format nil "Dying...")))
+                  (sb-ext:save-lisp-and-die "kore.dat" :executable t)
+                  res))))
+    (setf (nth 3 rec) fun)
+    (let ((res2 (funcall fun)))
+      (ksleep 10)
+      (format t "res2 = ~a~%" res2))))
+
+
+(defun kload (path)
+  (declare (optimize
+            (safety 0)
+            (speed 0)
+            (space 0)
+            (debug 0)
+            (compilation-speed 0)))
+
+  ;(declaim ((sb-ext::muffle-conditions sb-ext::compiler-note)))
+  (let* ((rec (nth 4 *CMDS*))
+         (fun (nth 3 rec)))
+    (funcall fun path)))
+
 
         ;; (var
         ;;       (if (>= (* usec (get-internal-real-time)) (* usec current))
