@@ -3,12 +3,12 @@
                        ( "help" 0 "Displays help" nil )
                        ( "car" 1 "Returns head of list" cl::car )
                        ( "cdr" 2 "Returns rest of list" cl::cdr )
-                       ( "nth" 3 "Returns nth element of list" cl:nth )
-                       ( "load" 4 "Loads a Lisp source file" cl:load )
-                       ( "match" . nil )
+                       ( "nth" 3 "Returns nth element of list" cl::nth )
+                       ( "load" 4 "Loads a Lisp source file" cl::load )
+                       ( "getf" 5 "Accesses a place" cl::getf )
+                       ( "setf" 6 "Sets a place to some value" cl::setf )
+                       ( "match" 7 "Matches a string" nil )
                        ( "do" . nil )
-                       ( "getf" . nil )
-                       ( "setf" . nil )
                        ))
 
 (defun khelp ()
@@ -18,7 +18,6 @@
     (setf (nth 3 rec) fun)
     (funcall fun)))
   
-
 (defun kload (path)
   (let* ((rec (nth 4 *CMDS*))
          (fun (nth 3 rec)))
@@ -99,14 +98,13 @@
       )
     nil
     ))
-      
-    
-      
-    
-    
 
-    
-
+(defun kmatch (x pattern)
+  (let* ((rec (nth 7 *CMDS*))
+         (fun (lambda (x pattern)
+                (match-3 x pattern))))
+    (setf (nth 3 rec) fun)
+    (funcall fun x pattern)))
                    
 (defun do-repl (input-stream)
   (read-char input-stream)
