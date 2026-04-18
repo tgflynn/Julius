@@ -8,7 +8,8 @@
                        ( "getf" 5 "Accesses a place" cl::getf )
                        ( "setf" 6 "Sets a place to some value" cl::setf )
                        ( "match" 7 "Matches a string" nil )
-                       ( "do" . nil )
+                       ( "do" 8 "do loop" cl::do )
+                       ( "die" 9 "Save image and exit" nil )
                        ))
 
 (defun khelp ()
@@ -19,9 +20,55 @@
     (funcall fun)))
   
 (defun kload (path)
+  (declare (optimize
+            (safety 0)
+            (speed 0)
+            (space 0)
+            (debug 0)
+            (compilation-speed 0)))
+
+  ;(declaim ((sb-ext::muffle-conditions sb-ext::compiler-note)))
   (let* ((rec (nth 4 *CMDS*))
          (fun (nth 3 rec)))
     (funcall fun path)))
+
+(defun ksleep (msec)
+  ;; (declare (optimize
+  ;;           (safety 0)
+  ;;           (speed 0)
+  ;;           (space 0)
+  ;;           (debug 0)
+  ;;           (compilation-speed 0)))
+  (let* ((units-per-msec (/ internal-time-units-per-second 1000))
+         (units-per-usec internal-time-units-per-second)
+         (current (get-internal-real-time)))
+    (do ((var 1 (1+ var)))
+        ((>= (get-internal-real-time) (+ current (* msec units-per-msec)))
+         (format t "var = ~a units-per-msec = ~a units-per-usec = ~a~%"
+                 var units-per-msec units-per-usec)))
+    ))
+
+        ;; (var
+        ;;       (if (>= (* usec (get-internal-real-time)) (* usec current))
+        ;;           (break-from do nil))))))
+         
+    
+
+(defun kdie ()
+  (declare (optimize
+            (safety 0)
+            (speed 0)
+            (space 0)
+            (debug 0)
+            (compilation-speed 0)))
+  (let* ((rec (nth 9 *CMDS*))
+         (fun (lambda ()
+                (format nil "Dying...")
+                ;(sb-ext:save-lisp-and-die "kore.dat"))
+           )))
+    (setf (nth 3 rec) fun)
+    (funcall fun)))
+
 
 ;;; (setf (cdr (nth 0 *CMDS*)) '(0 "Displays help" nil))
 
@@ -105,7 +152,38 @@
                 (match-3 x pattern))))
     (setf (nth 3 rec) fun)
     (funcall fun x pattern)))
-                   
+
+(defmacro klambda (&whole form &rest bvl-decls-and-body)
+  (declare (ignore bvl-decls-and-body))
+  `#',form)
+
+;; (defun kloop (var begin end cnt sexpr)
+;;   (format t "var = ~a begin = ~a end = ~a cnt = ~a sexpr = ~s~%"
+;;           var begin end cnt sexpr)
+;;   (let* ((vsym (quote var))
+;;          (fun (lambda (vsym)
+;;                sexpr))
+;;          (res (funcall fun cnt)))
+;;     (if (= cnt end)
+;;         (let ((gsym ((gensym))))
+;;           ((lambda (gsym) res) gsym))
+;;       (kloop var begin end (1+ cnt) sexpr))))
+
+;; (kloop 'i 0 5 0 '(let ((j 0))
+;;                   (setf j (+ i 1))
+;;                   j))
+
+;; (defun kdo (var begin end sexpr)
+;;   (let* ((rec (nth 8 *CMDS*))
+;;          (fun (lambda (var begin end sexpr)
+;;                 (do ((var begin (1+ var)))
+;;                     ((= var end))
+;;                   (progn
+;;                     sexpr)))))       
+;;     (setf (nth 3 rec) fun)
+;;     (funcall fun var begin end sexpr)))
+
+
 (defun do-repl (input-stream)
   (read-char input-stream)
   )
