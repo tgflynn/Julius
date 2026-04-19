@@ -11,6 +11,8 @@
                        ( "do" 8 "do loop" cl::do )
                        ( "die" 9 "Save image and exit" nil )
                        ( "kcore" 10 "Save image" nil )
+                       ( "krand" 11 "Returns a random float" nil )
+                       ( "kgen" 12 "Generates a sequence of integers" nil )
                        ))
 
 (defun khelp ()
@@ -20,6 +22,28 @@
     (setf (nth 3 rec) fun)
     (funcall fun)))
 
+(defun kgen (n &optional (min 0) (max 1))
+  (let* ((rec (nth 12 *CMDS*))
+         (lst `(nil))
+         (fun (lambda (n min max)
+                (cond
+                  ((> n min)
+                   (list (kgen (- n 1) min max)) (car lst))
+                  (t
+                   (random (expt 2 max)))))))
+
+         
+    (setf (nth 3 rec) fun)
+    (funcall fun n min max)))
+
+
+(defun krand (nbits)
+  (let* ((rec (nth 11 *CMDS*))
+         (fun (lambda (nbits)
+                (float nbits))))
+    (setf (nth 3 rec) fun)
+    (funcall fun nbits)))
+  
 (defun ksleep (msec)
   ;; (declare (optimize
   ;;           (safety 0)
@@ -47,7 +71,8 @@
          (fun (lambda ()
                 (ksleep 10000)
                 (let ((res (format nil "Dying...")))
-                  (sb-ext:save-lisp-and-die "kore.dat" :executable t)
+                  ;(sb-ext:save-lisp-and-die "kore.dat" :executable t :toplevel (function khelp))
+                  (sb-ext:save-lisp-and-die "kore.dat" :executable t :toplevel (function khelp))
                   res))))
     (setf (nth 3 rec) fun)
     (let ((res2 (funcall fun)))
