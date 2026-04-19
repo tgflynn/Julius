@@ -22,19 +22,22 @@
     (setf (nth 3 rec) fun)
     (funcall fun)))
 
-(defun kgen (n &optional (min 0) (max 1))
-  (let* ((rec (nth 12 *CMDS*))
-         (lst `(nil))
-         (fun (lambda (n min max)
-                (cond
-                  ((> n min)
-                   (list (kgen (- n 1) min max)) (car lst))
-                  (t
-                   (random (expt 2 max)))))))
-
+(defun kgen (n &optional (max 1))
+  (let* (;(rec (nth 12 *CMDS*))
+         (lst '())
+         (fun (lambda (max)
+                (setf lst (append lst (list (random (expt 2 max)))))))           
+         ;(tres (funcall fun max))
+         )
          
-    (setf (nth 3 rec) fun)
-    (funcall fun n min max)))
+    ;; (format t "tres = ~a n = ~a max = ~a lst = ~a~%"
+    ;;         tres n max lst)
+         
+    ;;(setf (nth 3 rec) kgen)
+    ;;(funcall fun max)
+
+    (dotimes (ind n lst) (funcall fun max))
+    ))
 
 
 (defun krand (nbits)
