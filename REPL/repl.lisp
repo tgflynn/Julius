@@ -29,15 +29,32 @@
                 (setf lst (append lst (list (random (expt 2 max)))))))           
          ;(tres (funcall fun max))
          )
-         
-    ;; (format t "tres = ~a n = ~a max = ~a lst = ~a~%"
-    ;;         tres n max lst)
-         
-    ;;(setf (nth 3 rec) kgen)
-    ;;(funcall fun max)
-
+      
     (dotimes (ind n lst) (funcall fun max))
+
+    (let ((carry 0)
+          (idx 0)
+          (s 0))
+
+      (format t "lst = ~a~%" lst)
+      (mapcar #'(lambda (x) 
+                  (setf carry (mod x 2))
+                  (let ((nextd 0))
+                    (if (< idx n)
+                        (setf nextd (* carry (expt 2 (- (- n idx) 1))))
+                        (setf nextd 0))
+                    (setf s (+ s (- x carry) nextd))
+                    (incf idx)
+                    (format t "idx = ~a pidx = ~a x = ~a carry = ~a nextd = ~a s = ~a~%"
+                            idx (- idx 1) x carry nextd s)
+                    ))
+              lst)
+      (format t "lst = ~a~%" lst)
+      
+      s
+      )
     ))
+  
 
 
 (defun krand (nbits)
