@@ -15,6 +15,7 @@
                        ( "kgen" 12 "Generates a single random float" nil )
                        ( "kdivides" 13 "Checks if the 1st argument is divisible by the 2nd" nil )
                        ( "kseq" 14 "Generates n random floats" nil )
+                       ( "ksum" 15 "Sums a list" nil )
                        ))
 
 (defun khelp ()
@@ -97,6 +98,16 @@
          (format t "var = ~a units-per-msec = ~a units-per-usec = ~a~%"
                  var units-per-msec units-per-usec)))
     ))
+
+(defun ksum (lst)
+  (let ((s 0))
+    ;(format t "lst = ~a~%" lst)
+    (mapcar #'(lambda (x)
+                (let ((nx (if (equal x t) 1 x)))
+                  (cond ((numberp nx)
+                         (setf s (+ s nx)))
+                        (t 'nil)))) lst)
+    s))
 
 (defun kcore ()
   (declare (optimize
