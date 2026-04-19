@@ -12,7 +12,9 @@
                        ( "die" 9 "Save image and exit" nil )
                        ( "kcore" 10 "Save image" nil )
                        ( "krand" 11 "Returns a random float" nil )
-                       ( "kgen" 12 "Generates a sequence of integers" nil )
+                       ( "kgen" 12 "Generates a single random float" nil )
+                       ( "kdivides" 13 "Checks if the 1st argument is divisible by the 2nd" nil )
+                       ( "kseq" 14 "Generates n random floats" nil )
                        ))
 
 (defun khelp ()
@@ -21,6 +23,12 @@
                 "This is the help.")))
     (setf (nth 3 rec) fun)
     (funcall fun)))
+
+(defun kdivides (a b)
+  (let ((c (if (= b 0) 0
+               (mod a b))))
+    (when (= c 0)
+      't)))
 
 (defun kgen (n &optional (max 1))
   (let* (;(rec (nth 12 *CMDS*))
@@ -36,7 +44,7 @@
           (idx 0)
           (s 0))
 
-      (format t "lst = ~a~%" lst)
+      ;(format t "lst = ~a~%" lst)
       (mapcar #'(lambda (x) 
                   (setf carry (mod x 2))
                   (let ((nextd 0))
@@ -45,11 +53,11 @@
                         (setf nextd 0))
                     (setf s (+ s (- x carry) nextd))
                     (incf idx)
-                    (format t "idx = ~a pidx = ~a x = ~a carry = ~a nextd = ~a s = ~a~%"
-                            idx (- idx 1) x carry nextd s)
+                    ;; (format t "idx = ~a pidx = ~a x = ~a carry = ~a nextd = ~a s = ~a~%"
+                    ;;         idx (- idx 1) x carry nextd s)
                     ))
               lst)
-      (format t "lst = ~a~%" lst)
+      ;(format t "lst = ~a~%" lst)
       
       s
       )
@@ -63,7 +71,17 @@
                 (float nbits))))
     (setf (nth 3 rec) fun)
     (funcall fun nbits)))
-  
+
+(defun kseq (n)
+  (let (
+        (lst '())
+        )
+    (dotimes (ind n lst)
+      (setf lst (append (list (kgen 8)) lst)))
+      
+    lst
+    ))
+
 (defun ksleep (msec)
   ;; (declare (optimize
   ;;           (safety 0)
