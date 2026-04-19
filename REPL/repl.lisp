@@ -16,6 +16,7 @@
                        ( "kdivides" 13 "Checks if the 1st argument is divisible by the 2nd" nil )
                        ( "kseq" 14 "Generates n random floats" nil )
                        ( "ksum" 15 "Sums a list" nil )
+                       ( "kgseq" 16 "Generates a list of integers" nil )
                        ))
 
 (defun khelp ()
@@ -108,6 +109,15 @@
                          (setf s (+ s nx)))
                         (t 'nil)))) lst)
     s))
+
+(defun kgseq (len start &optional (lst '()))
+  ;;(format t "len=~a start=~a lst=~a~%" len start lst)
+  (cond
+    ((and (listp lst) (>= len 1))
+     (kgseq (- len 1) (+ start 1) (cons start lst)))
+    (t
+     (reverse lst))))
+
 
 (defun kcore ()
   (declare (optimize
