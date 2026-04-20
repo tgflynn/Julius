@@ -17,6 +17,8 @@
                        ( "kseq" 14 "Generates n random floats" nil )
                        ( "ksum" 15 "Sums a list" nil )
                        ( "kgseq" 16 "Generates a list of integers" nil )
+                       ( "kmonte" 17 "Approximates pi" nil )
+                       ( "kfact" 18 "Computes n!" nil )
                        ))
 
 (defun khelp ()
