@@ -94,12 +94,13 @@
   ;;           (debug 0)
   ;;           (compilation-speed 0)))
   (let* ((units-per-msec (/ internal-time-units-per-second 1000))
-         (units-per-usec internal-time-units-per-second)
+         ;(units-per-usec internal-time-units-per-second)
          (current (get-internal-real-time)))
     (do ((var 1 (1+ var)))
         ((>= (get-internal-real-time) (+ current (* msec units-per-msec)))
-         (format t "var = ~a units-per-msec = ~a units-per-usec = ~a~%"
-                 var units-per-msec units-per-usec)))
+         ;; (format t "var = ~a units-per-msec = ~a units-per-usec = ~a~%"
+         ;;         var units-per-msec units-per-usec)
+         ))
     ))
 
 (defun ksum (lst)
@@ -295,7 +296,13 @@
 
 
 (defun do-repl (input-stream)
-  (read-char input-stream)
+  (dotimes (i 1 (incf i))
+    (ksleep 5000)
+    (let ((ic
+           (read-char-no-hang input-stream 't :EOF 't)))
+      (ksleep 5000)
+      (format t "i = ~a ic = ~a~%" i ic))
+    )
   )
 
 (defun repl (x &optional input-stream)
