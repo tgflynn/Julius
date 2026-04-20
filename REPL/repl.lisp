@@ -307,6 +307,19 @@
 ;;     )
 ;;   )
 
+;(defparameter *my-stream* (make-synonym-stream '*terminal-io*))
+
+(defun do-repl-2 (input-stream)
+  (let* ((is (make-synonym-stream input-stream))
+        ;(bfun (slot-value is 'sb-impl::bin))
+         (bfun (slot-value sb-sys::*tty* 'sb-impl::bin))
+         ;(bis (funcall bfun is))
+         )
+    (format t "bfun = ~s~%" bfun)
+    (let* ((ic (read-char is))
+           (cc (char-code ic)))
+      (format t "ic = ~s cc = ~s~%" ic cc))))
+
 (defun do-repl (input-stream)
   (do ((c (read-char input-stream)
           (read-char input-stream nil 'the-end)))
