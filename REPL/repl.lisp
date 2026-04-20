@@ -295,15 +295,23 @@
 ;;     (funcall fun var begin end sexpr)))
 
 
+;; (defun do-repl (input-stream)
+;;   (dotimes (i 1 (incf i))
+;;     ;(ksleep 5000)
+;;     (let ((ic
+;;            (read-char input-stream)
+;;            ;(read-char-no-hang input-stream 't :EOF 't)
+;;             ))
+;;       ;(ksleep 5000)
+;;       (format t "i = ~a ic = ~s~%" i ic))
+;;     )
+;;   )
+
 (defun do-repl (input-stream)
-  (dotimes (i 1 (incf i))
-    (ksleep 5000)
-    (let ((ic
-           (read-char-no-hang input-stream 't :EOF 't)))
-      (ksleep 5000)
-      (format t "i = ~a ic = ~a~%" i ic))
-    )
-  )
+  (do ((c (read-char input-stream)
+          (read-char input-stream nil 'the-end)))
+      ((not (characterp c)))
+    (format t "~s " c)))
 
 (defun repl (x &optional input-stream)
   (if x
