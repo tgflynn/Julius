@@ -307,7 +307,7 @@
 ;;     )
 ;;   )
 
-;(defparameter *my-stream* (make-synonym-stream '*terminal-io*))
+(defparameter *my-stream* (make-synonym-stream '*terminal-io*))
 
 (defun do-repl-2 (input-stream)
   (let* ((is (make-synonym-stream input-stream))
@@ -316,9 +316,11 @@
          ;(bis (funcall bfun is))
          )
     (format t "bfun = ~s~%" bfun)
-    (let* ((ic (read-char is))
-           (cc (char-code ic)))
-      (format t "ic = ~s cc = ~s~%" ic cc))))
+    (let* ((pc (peek-char t is nil))
+           ;(ic (read-char is t 'the-end))
+           (cc (char-code pc)))
+      (unread-char pc is)
+      (format t "pc = ~s cc = ~s~%" pc cc))))
 
 (defun do-repl (input-stream)
   (do ((c (read-char input-stream)
