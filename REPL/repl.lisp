@@ -302,3 +302,25 @@
       (do-repl input-stream)
       )
   )
+
+(defun kmonte (n)
+  (/ (float (ksum (kseq n))) (float (expt 2 8))))
+  
+  ;; (/ (float (ksum (mapcar #'(lambda (x y)
+  ;;                             (+ (expt x 2) (expt y 2)))
+  ;;                         (kseq n) (kseq n))))
+  ;;    (float (expt 2 8))))
+
+;; (defun kmonte (n)
+;;   (/ (float (ksum (mapcar #'(lambda (x y)
+;;                               (+ (expt x 2) (expt y 2)))
+;;                           (kseq n) (kseq n))))
+;;      (float (expt 2 8))))
+
+(defun kfact (n)
+  (cond ((<= n 1) 1)
+        (t (* n (kfact (- n 1))))))
+
+;;; (float (ksum (mapcar #'(lambda (x) (/ 1 (kfact x))) (kgseq 15 0))))
+;;; approximately equals:
+;;; (exp 1.0)
