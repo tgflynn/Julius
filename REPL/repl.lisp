@@ -1,6 +1,6 @@
 
 (defparameter *CMDS* '(
-                       ( "help" 0 "Displays help" nil )
+                       ( "khelp" 0 "Displays help" nil )
                        ( "car" 1 "Returns head of list" cl::car )
                        ( "cdr" 2 "Returns rest of list" cl::cdr )
                        ( "nth" 3 "Returns nth element of list" cl::nth )
@@ -19,6 +19,7 @@
                        ( "kgseq" 16 "Generates a list of integers" nil )
                        ( "kmonte" 17 "Approximates pi" nil )
                        ( "kfact" 18 "Computes n!" nil )
+                       ( "khex" 19 "Formats numbers as hex strings" nil )
                        ))
 
 (defun khelp ()
@@ -27,6 +28,13 @@
                 "This is the help.")))
     (setf (nth 3 rec) fun)
     (funcall fun)))
+
+(defun khex (arg)
+  (let* ((rec (nth 19 *CMDS*))
+         (fun #'(lambda (x)
+                  (format nil "~X" x))))
+    (setf (nth 3 rec) fun)
+    (funcall fun arg)))
 
 (defun kdivides (a b)
   (let ((c (if (= b 0) 0
@@ -356,3 +364,5 @@
 ;;; (float (ksum (mapcar #'(lambda (x) (/ 1 (kfact x))) (kgseq 15 0))))
 ;;; approximately equals:
 ;;; (exp 1.0)
+
+(khelp)
