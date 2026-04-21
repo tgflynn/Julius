@@ -442,13 +442,44 @@
 ;;           (format nil "~A> " #\K))))
 ;;   )
 
-(defun addfun (fname num lfun)
-  (let* ((rec (nth num *CMDS*)))
-    (setf (nth 0 rec) fname)
-    (setf (nth 3 rec) lfun)))
-
-(progn
-  (addfun "ktime" 20 #'ktime)
-  
-  (khelp)
+(defun kprint (object &optional (output-stream *standard-output*))
+  ;;   ;(declare (sb-ext:disable-package-locks :print))
+  (cl::print object output-stream)
+  (terpri output-stream)
+  (format output-stream "K> ")
+  ;(write #\K :stream output-stream)
+  ;(cl:print #\> output-stream)
+  ;(cl:print #\space output-stream)
+;;   ;(write-string (format nil "~a" object) output-stream)
+;;   ;object
   )
+
+(defun ktrue ()
+  't)
+
+(defmacro kwhile (condition &rest body)
+  `(tagbody
+    start (if (,@condition) ,@body (go end))
+    end (go start)))
+
+  
+  ;; `(do (() (,condition)
+  ;;    ,@body)))
+
+;; (defun addfun ()
+;;   (setf *CMDS* (cons *CMDS* (list nil nil nil))))
+                     
+
+;; (defun setfun (fname num lfun)
+;;   (kwhile (< (length *CMDS*) num)
+;;     (addfun))
+;;   (let* ((rec (nth num *CMDS*)))
+;;     (setf (nth 0 rec) fname)
+;;     (setf (nth 3 rec) lfun)))
+
+;; (progn
+;;   (addfun "ktime" 20 #'ktime)
+;;   (addfun "ktime" 21 #'kprint)
+  
+;;   (khelp)
+;;   )
