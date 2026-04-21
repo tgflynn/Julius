@@ -1,0 +1,42 @@
+;; (let ((res
+;;        (macroexpand-1 '(kwhile (k-inbounds-p (length *CMDS*) num (+ num 1))
+;;                         (addfun)))))
+;;   (format t "~a~%" res))
+
+;(KWHILE (K-INBOUNDS-P (LENGTH *CMDS*) NUM (+ NUM 1)) (ADDFUN))
+
+
+
+;; (LET ((NUM 5))
+;;   (TAGBODY
+;;    START
+;;      (FORMAT T "NUM = ~A~%" NUM)
+;;      (IF (K-INBOUNDS-P (LENGTH *CMDS*) NUM (+ NUM 1))
+;;          (ADDFUN)
+;;          (GO END))
+;;    END
+;;      (FORMAT T "NUM = ~A~% (AFTER END)" NUM)
+;;      (GO START))
+;;  )
+
+  ;; (let ((tnum num))
+  ;;   (kwhile (k-inbounds-p (length *CMDS*) tnum (+ tnum 1))
+  ;;           (progn
+  ;;             (addfun)
+  ;;             (incf tnum))))
+
+(macroexpand-1 '(kwhile (k-inbounds-p (length *CMDS*) tnum (+ tnum 1))
+                 (progn
+                   (addfun)
+                   (incf tnum))))
+
+(macroexpand-1 '(kwhile (k-inbounds-p (length *CMDS*) tnum (+ tnum 1)) (progn (addfun) (incf tnum))))
+
+(TAGBODY
+ START
+   (IF (K-INBOUNDS-P (LENGTH *CMDS*) TNUM (+ TNUM 1))
+       (PROGN (ADDFUN) (INCF TNUM))
+       (GO END))
+ END
+   (GO START))
+

@@ -462,21 +462,28 @@
     start (if (,@condition) ,@body (go end))
     end (go start)))
 
+(defun k-inbounds-p (x xmin xmax)
+  (and (>= x xmin) (<= x xmax)))
  
 (defun addfun ()
   (setf *CMDS* (append *CMDS* '((nil nil nil)))))
 
 
 (defun setfun (fname num lfun)
-  (kwhile (< (length *CMDS*))
-          (addfun))
+  (let ((tnum num))
+    (kwhile (k-inbounds-p (length *CMDS*) tnum (+ tnum 1))
+            (progn
+              (addfun)
+              (incf tnum))))
   (let* ((rec (nth num *CMDS*)))
     (setf (nth 0 rec) fname)
     (setf (nth 3 rec) lfun)))
 
-;; (progn
-;;   (setfun "ktime" 20 #'ktime)
+(progn
+;;  (setfun "ktime" 20 #'ktime)
 ;;   (setfun "kprint" 21 #'kprint)
   
 ;;   (khelp)
-;;   )
+  )
+
+
