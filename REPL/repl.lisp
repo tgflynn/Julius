@@ -20,6 +20,7 @@
                        ( "kmonte" 17 "Approximates pi" nil )
                        ( "kfact" 18 "Computes n!" nil )
                        ( "khex" 19 "Formats numbers as hex strings" nil )
+                       ( "ktime" 20 "Measure execution time" nil )
                        ))
 (defun knilp (x)
   (cond ((equal x nil) 't)
@@ -37,7 +38,7 @@
                                                "~{~5,10T~a~}~%"
                                                (list (nth 0 x) (nth 1 x) (nth 2 x))
                                                ))
-                                   (khead 20 *CMDS*))))
+                                   *CMDS*)))
                   (format t "This is the help.~%")
                   (format t "Commands :~%~{~a~}~%" lst)
                 ))))
@@ -147,6 +148,17 @@
          ;;         var units-per-msec units-per-usec)
          ))
     ))
+
+(defun ktime (fun)
+  (let* ((t1 (get-internal-real-time)))
+    (let ((res (funcall fun)))
+      ;(format t "res = ~a~%" res)
+      (let* ((t2 (get-internal-real-time))
+             (dt (float (/ (- t2 t1) internal-time-units-per-second))))
+        (format t "dt = ~a [s]~%" dt)
+        (values dt res)))
+    ))
+;;; Example: (ktime #'(lambda () (kgamma2 100000)))
 
 (defun ksum (lst)
   (let ((s 0))
@@ -402,4 +414,41 @@
 ;;; approximately equals:
 ;;; (exp 1.0)
 
-(khelp)
+(defun kgamma (M)
+  (let* ((fun #'(lambda (n)
+                  (- (ksum (mapcar
+                            #'(lambda (k)
+                                (/ 1 k))
+                            (kgseq M 1)))
+                     (log n)))))
+    (funcall fun M)))
+
+(defun kgamma2 (M)
+  (let ((s 0))
+    (dotimes (k M (incf k))
+      (setf s (+ s (/ 1 (+ k 1)))))
+    (let ((res (- s (log M))))
+      (format t "~%~,20f~%" res)
+      res)
+    ))
+              
+
+;; (defun set-prompt ()
+;;   ;(declare (sb-ext:disable-package-locks sb-impl::*repl-prompt-fn*))
+;;   (declare (sb-ext:disable-package-locks sb-impl))
+;;   (setf sb-impl::*repl-prompt-fn*
+;;         (lambda ()
+;;          ;(format nil "~A> " (package-name *package*)))))
+;;           (format nil "~A> " #\K))))
+;;   )
+
+(defun addfun (fname num lfun)
+  (let* ((rec (nth num *CMDS*)))
+    (setf (nth 0 rec) fname)
+    (setf (nth 3 rec) lfun)))
+
+(progn
+  (addfun "ktime" 20 #'ktime)
+  
+  (khelp)
+  )
