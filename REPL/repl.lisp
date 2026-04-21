@@ -21,13 +21,50 @@
                        ( "kfact" 18 "Computes n!" nil )
                        ( "khex" 19 "Formats numbers as hex strings" nil )
                        ))
+(defun knilp (x)
+  (cond ((equal x nil) 't)
+        (t nil)))
+
+(defun khead (n lst)
+  (cond ((or (= n 0) (knilp lst)) nil)
+        (t (cons (car lst) (khead (- n 1) (cdr lst))))))
 
 (defun khelp ()
   (let* ((rec (nth 0 *CMDS*))
          (fun (lambda ()
-                "This is the help.")))
+                (let ((lst (mapcar #'(lambda (x)
+                                       (format nil
+                                               "~{~5,10T~a~}~%"
+                                               (list (nth 0 x) (nth 1 x) (nth 2 x))
+                                               ))
+                                   (khead 20 *CMDS*))))
+                  (format t "This is the help.~%")
+                  (format t "Commands :~%~{~a~}~%" lst)
+                ))))
     (setf (nth 3 rec) fun)
     (funcall fun)))
+
+
+(defun khelp-2 ()
+  (let* ((rec (nth 0 *CMDS*))
+         (fun (lambda ()
+                (let ((lst (mapcar #'(lambda (x)
+                                       (format nil
+                                        "~10,1,20,'*<~a~> ~10,1,20,'*<~a~> ~80,0T~0,1,50,'*<~a~> ~%"
+                                               (nth 0 x) (nth 1 x) (nth 2 x)
+                                               ))
+                                   (khead 3 *CMDS*))))
+                  (format t "This is the help.~%")
+                  (format t "Commands :~%~{~a~%~}~%" lst)
+                ))))
+    (setf (nth 3 rec) fun)
+    (funcall fun)))
+
+; "~0,1,20,'*<~a ~; (~a) ~; ~a~> ~%"
+;"QQ" "Q" "Q"
+
+
+;~10<foo~;bar~>
 
 (defun khex (arg)
   (let* ((rec (nth 19 *CMDS*))
