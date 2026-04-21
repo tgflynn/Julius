@@ -479,6 +479,34 @@
     (setf (nth 0 rec) fname)
     (setf (nth 3 rec) lfun)))
 
+(defmacro expand-1 (form &environment env)
+  (multiple-value-bind (expansion expanded-p)
+      (macroexpand-1 form env)
+    `(values ',expansion ',expanded-p)))
+
+(defmacro expand (form &environment env)
+  (multiple-value-bind (expansion expanded-p)
+      (macroexpand form env)
+    `(values ',expansion ',expanded-p)))
+
+(defmacro kexpand-1 (form &environment env)
+  (multiple-value-bind (expansion expanded-p)
+      (macroexpand form env)
+    (format t "expansion:~%~S~%" expansion)
+    `(values ',expansion ',expanded-p)
+    ))
+
+(defmacro keffacez (&rest body)
+  (declare (optimize
+            (safety 0)
+            (speed 0)
+            (space 0)
+            (debug 0)
+            (compilation-speed 0)))
+  (declare (muffle-conditions style-warning))
+  (progn ))
+
+
 (progn
 ;;  (setfun "ktime" 20 #'ktime)
 ;;   (setfun "kprint" 21 #'kprint)

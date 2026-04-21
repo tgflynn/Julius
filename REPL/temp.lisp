@@ -25,13 +25,14 @@
   ;;             (addfun)
   ;;             (incf tnum))))
 
-(macroexpand-1 '(kwhile (k-inbounds-p (length *CMDS*) tnum (+ tnum 1))
-                 (progn
-                   (addfun)
-                   (incf tnum))))
+(keffacez
+(kexpand-1 (kwhile (k-inbounds-p (length *CMDS*) tnum (+ tnum 1))
+                   (progn
+                     (addfun)
+                     (incf tnum))))
+)
 
-(macroexpand-1 '(kwhile (k-inbounds-p (length *CMDS*) tnum (+ tnum 1)) (progn (addfun) (incf tnum))))
-
+(keffacez
 (TAGBODY
  START
    (IF (K-INBOUNDS-P (LENGTH *CMDS*) TNUM (+ TNUM 1))
@@ -39,4 +40,15 @@
        (GO END))
  END
    (GO START))
+)
+
+;(macroexpand-1 '(kwhile (k-inbounds-p (length *CMDS*) tnum (+ tnum 1)) (progn (addfun) (incf tnum))))
+
+;; (TAGBODY
+;;  START
+;;    (IF (K-INBOUNDS-P (LENGTH *CMDS*) TNUM (+ TNUM 1))
+;;        (PROGN (ADDFUN) (INCF TNUM))
+;;        (GO END))
+;;  END
+;;    (GO START))
 
