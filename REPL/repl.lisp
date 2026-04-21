@@ -462,24 +462,21 @@
     start (if (,@condition) ,@body (go end))
     end (go start)))
 
-  
-  ;; `(do (() (,condition)
-  ;;    ,@body)))
+ 
+(defun addfun ()
+  (setf *CMDS* (append *CMDS* '((nil nil nil)))))
 
-;; (defun addfun ()
-;;   (setf *CMDS* (cons *CMDS* (list nil nil nil))))
-                     
 
-;; (defun setfun (fname num lfun)
-;;   (kwhile (< (length *CMDS*) num)
-;;     (addfun))
-;;   (let* ((rec (nth num *CMDS*)))
-;;     (setf (nth 0 rec) fname)
-;;     (setf (nth 3 rec) lfun)))
+(defun setfun (fname num lfun)
+  (kwhile (< (length *CMDS*))
+          (addfun))
+  (let* ((rec (nth num *CMDS*)))
+    (setf (nth 0 rec) fname)
+    (setf (nth 3 rec) lfun)))
 
 ;; (progn
-;;   (addfun "ktime" 20 #'ktime)
-;;   (addfun "ktime" 21 #'kprint)
+;;   (setfun "ktime" 20 #'ktime)
+;;   (setfun "kprint" 21 #'kprint)
   
 ;;   (khelp)
 ;;   )
