@@ -32,15 +32,33 @@
                      (incf tnum))))
 )
 
-(keffacez
-(TAGBODY
- START
-   (IF (K-INBOUNDS-P (LENGTH *CMDS*) TNUM (+ TNUM 1))
-       (PROGN (ADDFUN) (INCF TNUM))
-       (GO END))
- END
-   (GO START))
-)
+                                        ; (keffacez
+(DEFUN TEST-ADD ()
+  (let* ((num 5)
+         (tnum num)
+         (idx 0))
+    (TAGBODY
+     START
+       (PROGN
+         (FORMAT T "After START, TNUM = ~A~%" TNUM)
+         (incf idx)
+         (when (> idx 10) (return-from TEST-ADD idx))
+         (IF (AND (K-INBOUNDS-P (LENGTH *CMDS*) TNUM (+ TNUM 1)) (< TNUM 10))
+             (PROGN
+               (FORMAT T "NUM = ~A TNUM = ~A (LENGTH *CMDS*) = ~A~%"
+                       NUM TNUM (LENGTH *CMDS*))
+                                        ;(ADDFUN)
+               (INCF TNUM))
+             (GO END))
+         )
+     END
+       (PROGN
+         (FORMAT T "After END, TNUM = ~A~%" TNUM)
+         (GO START)
+         )
+       )
+    )
+  )
 
 ;(macroexpand-1 '(kwhile (k-inbounds-p (length *CMDS*) tnum (+ tnum 1)) (progn (addfun) (incf tnum))))
 

@@ -470,11 +470,14 @@
 
 
 (defun setfun (fname num lfun)
-  (let ((tnum num))
-    (kwhile (k-inbounds-p (length *CMDS*) tnum (+ tnum 1))
+  (let ((tnum 0)
+        (done nil))
+    (kwhile (and (k-inbounds-p (length *CMDS*) num (+ num 10)) done)
             (progn
               (addfun)
-              (incf tnum))))
+              (incf tnum)
+              (when (> tnum 10) (setf done 't))
+              )))
   (let* ((rec (nth num *CMDS*)))
     (setf (nth 0 rec) fname)
     (setf (nth 3 rec) lfun)))
