@@ -499,7 +499,20 @@
     `(values ',expansion ',expanded-p)
     ))
 
-(defmacro keffacez (pas &rest body)
+;; (defmacro kexpand (form &environment env)
+;;   (kexpand-1 form env))
+
+(defmacro kexpand (&whole wform &rest args)
+  (declare (muffle-conditions style-warning))
+  (format t "wform = ~s~%" wform)
+  (let ((hd (car wform))
+        (tl (cdr wform)))
+    (format t "hd = ~s tl = ~s~%" hd tl)
+    (if (equal hd 'kexpand)
+        (kexpand-1 (cdr wform))
+        (cdr wform))))
+
+(defmacro keffacez (&optional (pas nil) &rest body)
   (declare (optimize
             (safety 0)
             (speed 0)
