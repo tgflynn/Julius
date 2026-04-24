@@ -1,4 +1,17 @@
 
+(defmacro keffacez (&optional (pas nil) &rest body)
+  (declare (optimize
+            (safety 0)
+            (speed 0)
+            (space 0)
+            (debug 0)
+            (compilation-speed 0)))
+  (declare (muffle-conditions style-warning))
+  (if (equal (eval pas) t)
+      `(progn ,@body)
+      `(progn )))
+
+(keffacez nil
 (defparameter *CMDS* '(
                        ( "khelp" 0 "Displays help" nil )
                        ( "car" 1 "Returns head of list" cl::car )
@@ -14,14 +27,22 @@
                        ( "krand" 11 "Returns a random float" nil )
                        ( "kgen" 12 "Generates a single random float" nil )
                        ( "kdivides" 13 "Checks if the 1st argument is divisible by the 2nd" nil )
-                       ( "kseq" 14 "Generates n random floats" nil )
-                       ( "ksum" 15 "Sums a list" nil )
-                       ( "kgseq" 16 "Generates a list of integers" nil )
-                       ( "kmonte" 17 "Approximates pi" nil )
-                       ( "kfact" 18 "Computes n!" nil )
-                       ( "khex" 19 "Formats numbers as hex strings" nil )
-                       ( "ktime" 20 "Measure execution time" nil )
                        ))
+)
+
+(defparameter *CMDS* '(
+                       ( "khelp" 0 "Displays help" nil )
+                       ( "car" 1 "Returns head of list" cl::car )
+                       ( "cdr" 2 "Returns rest of list" cl::cdr )
+                       ( "nth" 3 "Returns nth element of list" cl::nth )
+                       ( "load" 4 "Loads a Lisp source file" cl::load )
+                       ( "getf" 5 "Accesses a place" cl::getf )
+                       ( "setf" 6 "Sets a place to some value" cl::setf )
+                       ( "match" 7 "Matches a string" nil )
+                       ( "do" 8 "do loop" cl::do )
+                       ( "die" 9 "Save image and exit" nil )
+                       ))
+
 
 (defun kerror (x)
   (format t "Error: ~s~%" x))
@@ -31,19 +52,6 @@
 
 (defun katomp (x)
   (not (consp x)))
-
-(defmacro keffacez (&optional (pas nil) &rest body)
-  (declare (optimize
-            (safety 0)
-            (speed 0)
-            (space 0)
-            (debug 0)
-            (compilation-speed 0)))
-  (declare (muffle-conditions style-warning))
-  (if (equal (eval pas) t)
-      `(progn ,@body)
-      `(progn )))
-
 
 (defun knilp (x)
   (cond ((equal x nil) 't)
@@ -656,6 +664,17 @@
 )
 
 (progn
+  (setfun "kcore" 10 "Save image" nil )
+  (setfun "krand" 11 "Returns a random float" nil )
+  (setfun "kgen" 12 "Generates a single random float" nil )
+  (setfun "kdivides" 13 "Checks if the 1st argument is divisible by the 2nd" nil )
+  (setfun "kseq" 14 "Generates n random floats" nil )
+  (setfun "ksum" 15 "Sums a list" nil )
+  (setfun "kgseq" 16 "Generates a list of integers" nil )
+  (setfun "kmonte" 17 "Approximates pi" nil )
+  (setfun "kfact" 18 "Computes n!" nil )
+  (setfun "khex" 19 "Formats numbers as hex strings" nil )
+  
   (setfun "ktime" 20 "Measure execution time" #'ktime)
   (setfun "kprint" 21 "Calls print" #'kprint)
   
