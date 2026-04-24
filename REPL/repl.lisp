@@ -502,6 +502,29 @@
 ;; (defmacro kexpand (form &environment env)
 ;;   (kexpand-1 form env))
 
+(defun kerror (x)
+  (format t "Error: ~s~%" x))
+
+(defun kidentity (x)
+  x)
+
+(defun katomp (x)
+  (not (consp x)))
+
+(defun kwalk-1 (sexpr fun)
+  (cond
+    ((consp sexpr) (let* ((hd (car sexpr))
+                         (tl (cdr sexpr))
+                          (nh (funcall fun hd)))
+                     (cond
+                       ((listp tl) (cons nh (kwalk-1 tl fun)))
+                       ((katomp nh) (cons nh (list nh)))
+                       (t (kerror "Unknown error"))))
+     )
+    (t (funcall fun sexpr))
+    )
+  )
+
 (defmacro kexpand (&whole wform &rest args)
   (declare (muffle-conditions style-warning))
   (format t "wform = ~s~%" wform)
