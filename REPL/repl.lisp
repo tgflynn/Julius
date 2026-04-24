@@ -53,15 +53,26 @@
   (cond ((or (= n 0) (knilp lst)) nil)
         (t (cons (car lst) (khead (- n 1) (cdr lst))))))
 
-;; (defun kfilter (pred lst)
-;;   (mapcar pred 
+(defun kfilter (pred lst)
+  (let* ((fun (lambda (x)
+                (if (funcall pred x) x nil)))
+         (tlst (mapcar fun lst)))
+    tlst
 
-(keffacez nil
+    (let ((hd (car tlst))
+          (tl (cdr tlst)))
+      (cond ((not (knilp hd)) (cons hd (kfilter pred tl)))
+            (t tl)))
+    )
+  )
+
+(keffacez t
 (defun kcomlist ()
-  {let ((lst (filter #'(lambda (x)
-                         (not (knilp x)))
-                     *CMDS*)))
-  lst)
+  (let ((lst (kfilter #'(lambda (x)
+                          (not (knilp (car x))))
+                      *CMDS*)))
+    lst)
+  )
 )
 
 (defun khelp ()
@@ -72,7 +83,7 @@
                                                "~{~5,10T~a~}~%"
                                                (list (nth 0 x) (nth 1 x) (nth 2 x))
                                                ))
-                                   *CMDS*)))
+                                   (kcomlist))))
                   (format t "This is the help.~%")
                   (format t "Commands :~%~{~a~}~%" lst)
                 ))))
