@@ -465,23 +465,6 @@
 (defun k-inbounds-p (x xmin xmax)
   (and (>= x xmin) (<= x xmax)))
  
-(defun addfun ()
-  (setf *CMDS* (append *CMDS* '((nil nil nil)))))
-
-
-(defun setfun (fname num lfun)
-  (let ((tnum 0)
-        (done nil))
-    (kwhile (and (k-inbounds-p (length *CMDS*) num (+ num 10)) done)
-            (progn
-              (addfun)
-              (incf tnum)
-              (when (> tnum 10) (setf done 't))
-              )))
-  (let* ((rec (nth num *CMDS*)))
-    (setf (nth 0 rec) fname)
-    (setf (nth 3 rec) lfun)))
-
 (defmacro expand-1 (form &environment env)
   (multiple-value-bind (expansion expanded-p)
       (macroexpand-1 form env)
@@ -565,6 +548,22 @@
     )
   )
 
+(defun addfun ()
+  (setf *CMDS* (append *CMDS* '((nil nil nil)))))
+
+
+(defun setfun (fname num lfun)
+  (let ((tnum 0)
+        (done nil))
+    (kwhile (and (k-inbounds-p (length *CMDS*) num (+ num 10)) done)
+            (progn
+              (addfun)
+              (incf tnum)
+              (when (> tnum 10) (setf done 't))
+              )))
+  (let* ((rec (nth num *CMDS*)))
+    (setf (nth 0 rec) fname)
+    (setf (nth 3 rec) lfun)))
 
 
 (progn
