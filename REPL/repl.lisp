@@ -22,6 +22,29 @@
                        ( "khex" 19 "Formats numbers as hex strings" nil )
                        ( "ktime" 20 "Measure execution time" nil )
                        ))
+
+(defun kerror (x)
+  (format t "Error: ~s~%" x))
+
+(defun kidentity (x)
+  x)
+
+(defun katomp (x)
+  (not (consp x)))
+
+(defmacro keffacez (&optional (pas nil) &rest body)
+  (declare (optimize
+            (safety 0)
+            (speed 0)
+            (space 0)
+            (debug 0)
+            (compilation-speed 0)))
+  (declare (muffle-conditions style-warning))
+  (if (equal (eval pas) t)
+      `(progn ,@body)
+      `(progn )))
+
+
 (defun knilp (x)
   (cond ((equal x nil) 't)
         (t nil)))
@@ -29,6 +52,17 @@
 (defun khead (n lst)
   (cond ((or (= n 0) (knilp lst)) nil)
         (t (cons (car lst) (khead (- n 1) (cdr lst))))))
+
+;; (defun kfilter (pred lst)
+;;   (mapcar pred 
+
+(keffacez nil
+(defun kcomlist ()
+  {let ((lst (filter #'(lambda (x)
+                         (not (knilp x)))
+                     *CMDS*)))
+  lst)
+)
 
 (defun khelp ()
   (let* ((rec (nth 0 *CMDS*))
@@ -169,6 +203,16 @@
                          (setf s (+ s nx)))
                         (t 'nil)))) lst)
     s))
+
+(defun kgenseq (len &optional (lst '()))
+  (let ((start 0))
+    ;;(format t "len=~a start=~a lst=~a~%" len start lst)
+    (cond
+      ((and (listp lst) (>= len 1))
+       (kgenseq (- len 1) (cons nil lst)))
+      (t
+       (reverse lst)))))
+
 
 (defun kgseq (len start &optional (lst '()))
   ;;(format t "len=~a start=~a lst=~a~%" len start lst)
@@ -481,28 +525,6 @@
 ;; (defmacro kexpand (form &environment env)
 ;;   (kexpand-1 form env))
 
-(defun kerror (x)
-  (format t "Error: ~s~%" x))
-
-(defun kidentity (x)
-  x)
-
-(defun katomp (x)
-  (not (consp x)))
-
-(defmacro keffacez (&optional (pas nil) &rest body)
-  (declare (optimize
-            (safety 0)
-            (speed 0)
-            (space 0)
-            (debug 0)
-            (compilation-speed 0)))
-  (declare (muffle-conditions style-warning))
-  (if (equal (eval pas) t)
-      `(progn ,@body)
-      `(progn )))
-
-
 (defun kwalk-1 (sexpr fun)
   (cond
     ((consp sexpr) (let* ((hd (car sexpr))
@@ -545,7 +567,8 @@
   )
 
 (defun addfun ()
-  (setf *CMDS* (append *CMDS* '((nil nil nil nil)))))
+  (let ((lst (kgenseq 4)))
+  (setf *CMDS* (append *CMDS* (list lst)))))
 
 (keffacez
 (defmacro kwhile (condition &rest body)
@@ -577,7 +600,7 @@
       
 
 
-(defun setfun (fname num lfun)
+(defun setfun (fname num description lfun)
   (let ((tlimit nil)
         (tnum 0)
         (done nil))
@@ -603,6 +626,7 @@
   (let* ((rec (nth num *CMDS*)))
     (setf (nth 0 rec) fname)
     (setf (nth 1 rec) num)
+    (setf (nth 2 rec) description)
     (setf (nth 3 rec) lfun)))
 
 (keffacez nil
@@ -621,8 +645,8 @@
 )
 
 (progn
-;;  (setfun "ktime" 20 #'ktime)
-;;   (setfun "kprint" 21 #'kprint)
+  (setfun "ktime" 20 "Measure execution time" #'ktime)
+  (setfun "kprint" 21 "Calls print" #'kprint)
   
 ;;   (khelp)
   )
