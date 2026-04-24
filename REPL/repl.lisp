@@ -659,7 +659,7 @@
   (setfun "ktime" 20 "Measure execution time" #'ktime)
   (setfun "kprint" 21 "Calls print" #'kprint)
   
-;;   (khelp)
+  (khelp)
   )
 
 
