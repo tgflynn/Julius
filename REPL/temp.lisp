@@ -25,14 +25,14 @@
   ;;             (addfun)
   ;;             (incf tnum))))
 
-(keffacez
+(keffacez nil
 (kexpand-1 (kwhile (k-inbounds-p (length *CMDS*) tnum (+ tnum 1))
                    (progn
                      (addfun)
                      (incf tnum))))
 )
 
-                                        ; (keffacez
+(keffacez t
 (DEFUN TEST-ADD ()
   (let* ((num 5)
          (tnum num)
@@ -59,6 +59,7 @@
        )
     )
   )
+)
 
 ;(macroexpand-1 '(kwhile (k-inbounds-p (length *CMDS*) tnum (+ tnum 1)) (progn (addfun) (incf tnum))))
 

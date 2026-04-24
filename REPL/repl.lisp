@@ -499,7 +499,7 @@
     `(values ',expansion ',expanded-p)
     ))
 
-(defmacro keffacez (&rest body)
+(defmacro keffacez (pas &rest body)
   (declare (optimize
             (safety 0)
             (speed 0)
@@ -507,7 +507,9 @@
             (debug 0)
             (compilation-speed 0)))
   (declare (muffle-conditions style-warning))
-  (progn ))
+  (if (equal (eval pas) t)
+      `(progn ,@body)
+      `(progn )))
 
 
 (progn
