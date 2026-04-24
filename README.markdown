@@ -1,5 +1,11 @@
 # Julius
 
+This is a very preliminary attempt to create a new Lisp dialect.
+
 ## Usage
 
+TBD
+
 ## Installation
+
+TBD
