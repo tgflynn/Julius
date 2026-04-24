@@ -511,6 +511,19 @@
 (defun katomp (x)
   (not (consp x)))
 
+(defmacro keffacez (&optional (pas nil) &rest body)
+  (declare (optimize
+            (safety 0)
+            (speed 0)
+            (space 0)
+            (debug 0)
+            (compilation-speed 0)))
+  (declare (muffle-conditions style-warning))
+  (if (equal (eval pas) t)
+      `(progn ,@body)
+      `(progn )))
+
+
 (defun kwalk-1 (sexpr fun)
   (cond
     ((consp sexpr) (let* ((hd (car sexpr))
@@ -525,6 +538,7 @@
     )
   )
 
+(keffacez nil
 (defmacro kexpand (&whole wform &rest args)
   (declare (muffle-conditions style-warning))
   (format t "wform = ~s~%" wform)
@@ -534,18 +548,23 @@
     (if (equal hd 'kexpand)
         (kexpand-1 (cdr wform))
         (cdr wform))))
+)
 
-(defmacro keffacez (&optional (pas nil) &rest body)
-  (declare (optimize
-            (safety 0)
-            (speed 0)
-            (space 0)
-            (debug 0)
-            (compilation-speed 0)))
+(defmacro kexpand (&whole wform &rest args)
   (declare (muffle-conditions style-warning))
-  (if (equal (eval pas) t)
-      `(progn ,@body)
-      `(progn )))
+  (let ((fun (lambda (x)
+               (if (equal x 'kexpand)
+                   'kexpand-1
+                   ;(quote 'kexpand)
+                   x))))
+    (format t "wform = ~s~%" wform)
+    (let ((rexpr (kwalk-1 wform fun)))
+      (format t "rexpr = ~s~%" rexpr)
+      rexpr
+      )
+    )
+  )
+
 
 
 (progn
