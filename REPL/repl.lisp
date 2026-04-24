@@ -457,10 +457,6 @@
 (defun ktrue ()
   't)
 
-(defmacro kwhile (condition &rest body)
-  `(tagbody
-    start (if (,@condition) ,@body (go end))
-    end (go start)))
 
 (defun k-inbounds-p (x xmin xmax)
   (and (>= x xmin) (<= x xmax)))
@@ -549,9 +545,67 @@
   )
 
 (defun addfun ()
-  (setf *CMDS* (append *CMDS* '((nil nil nil)))))
+  (setf *CMDS* (append *CMDS* '((nil nil nil nil)))))
+
+(keffacez
+(defmacro kwhile (condition &rest body)
+  `(tagbody
+    start (if (,@condition) ,@body (go end))
+    end
+      (progn
+        (if (not (,@condition))
+            (progn
+              (format t "kwhile: before go start: condition = ~s~%" (quote ,condition))
+              (go start)
+              )
+            nil)
+        )
+      )
+  )
+)
+
+(defmacro kwhile (condition &rest body)
+  `(tagbody
+    start (if (,@condition) ,@body (go end))
+
+    end
+      (if (,@condition)
+          (go start)
+          nil)
+      )
+  )
+      
 
 
+(defun setfun (fname num lfun)
+  (let ((tlimit nil)
+        (tnum 0)
+        (done nil))
+    (kwhile (progn
+              (format t "done = ~a~%" done)
+              (and (k-inbounds-p (length *CMDS*) num (+ num 10))) (not done))
+            (progn
+              (format t "length = ~a num = ~a tnum = ~a done = ~a~%"
+                      (length *CMDS*) num tnum done)
+              (addfun)
+              (incf tnum)
+              
+              (when (or (>= (length *CMDS*) (+ num 1))
+                        (and tlimit (> tnum 10)))
+                (setf done 't))
+
+              (format t "after when: length = ~a num = ~a tnum = ~a done = ~a~%"
+                      (length *CMDS*) num tnum done)
+              
+              
+              )))
+  (format t "after kwhile~%")
+  (let* ((rec (nth num *CMDS*)))
+    (setf (nth 0 rec) fname)
+    (setf (nth 1 rec) num)
+    (setf (nth 3 rec) lfun)))
+
+(keffacez nil
 (defun setfun (fname num lfun)
   (let ((tnum 0)
         (done nil))
@@ -564,7 +618,7 @@
   (let* ((rec (nth num *CMDS*)))
     (setf (nth 0 rec) fname)
     (setf (nth 3 rec) lfun)))
-
+)
 
 (progn
 ;;  (setfun "ktime" 20 #'ktime)
