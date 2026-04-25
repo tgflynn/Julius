@@ -179,7 +179,22 @@
             glob-char
             version
             )
-    name
+    `(
+      ( :host . ,host )
+      ( :pdev . ,pdev )
+      ( :dir . ,dir )
+      ( :name . ,name )
+      ( :dir-head . ,dir-head )
+      ( :dir-tail . ,dir-tail )
+      ( :dir-type . ,dir-type )
+      ( :name . ,name )
+      ( :ptype . ,ptype )
+      ( :pwild . ,pwild )
+      ( :is-pat . ,is-pat )
+      ( :pat-pieces . ,pat-pieces )
+      ( :glob-char . ,glob-char )
+      ( :version . ,version )
+      )
     )
   )
          
