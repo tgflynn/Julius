@@ -666,6 +666,9 @@
     (setf (nth 3 rec) lfun)))
 )
 
+(defun kread (&optional input-stream eof-error-p eof-value recursive-p)
+  (read input-stream eof-error-p eof-value recursive-p))
+
 (defun keval (form)
   (eval form))
 
@@ -685,6 +688,7 @@
   (setfun "kprint" 21 "Calls print" #'kprint)
   (setfun "kpwd" 22 "Returns current directory path" #'kpwd)
   (setfun "keval" 23 "Evaluates form" #'keval)
+  (setfun "kread" 24 "Reads and parses objects from input stream" #'kread)
   
   (khelp)
   )
