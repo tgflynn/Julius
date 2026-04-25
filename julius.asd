@@ -1,6 +1,6 @@
 (defsystem "julius"
   :version "0.0.1"
-  :author ""
+  :author "Timothy G. Flynn"
   :license ""
   :depends-on ()
   :components (
