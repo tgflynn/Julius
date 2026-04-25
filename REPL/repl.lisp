@@ -666,6 +666,9 @@
     (setf (nth 3 rec) lfun)))
 )
 
+(defun keval (form)
+  (eval form))
+
 (progn
   (setfun "kcore" 10 "Save image" nil )
   (setfun "krand" 11 "Returns a random float" nil )
@@ -681,6 +684,7 @@
   (setfun "ktime" 20 "Measure execution time" #'ktime)
   (setfun "kprint" 21 "Calls print" #'kprint)
   (setfun "kpwd" 22 "Returns current directory path" #'kpwd)
+  (setfun "keval" 23 "Evaluates form" #'keval)
   
   (khelp)
   )
