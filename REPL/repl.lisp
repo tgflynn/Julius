@@ -123,6 +123,19 @@
 (defun kpwd ()
   (truename "."))
 
+(defun kpath (obj)
+  (cond
+    ((knilp obj) (make-pathname))
+    ((stringp obj) (pathname obj))
+    ((pathnamep obj) obj)
+    (t (kerror (format nil "argument ~s is invalid" obj )))))
+
+(defun kls (&optional path)
+  (let ((tpath (if (knilp path) (kpwd) (kpath path))))
+    tpath
+    )
+  )
+    
 (defun khex (arg)
   (let* ((rec (nth 19 *CMDS*))
          (fun #'(lambda (x)
@@ -717,6 +730,8 @@
   (setfun "kprompt" 26 "Display prompt" #'kprompt)
   
   (khelp)
+
+  (krepl)
   )
 
 
