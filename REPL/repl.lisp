@@ -130,9 +130,54 @@
     ((pathnamep obj) obj)
     (t (kerror (format nil "argument ~s is invalid" obj )))))
 
+(defun kpath-split (path)
+  (let* ((name (pathname-name path))
+         (dir (pathname-directory path))
+         (ptype (pathname-type path))
+         (version (pathname-version path))
+         (host (pathname-host path))
+         (pdev (pathname-device path))
+         (pwild (wild-pathname-p path))
+         (dir-head (car dir))
+         (dir-tail (cdr dir))
+         (dir-type (cond
+                     ((equal dir-head :RELATIVE) :RELATIVE)
+                     ((equal dir-head :ABSOLUTE) :ABSOLUTE)
+                     (t :JULIUS-DIR-TYPE-STD)))
+         (glob-char (cond
+                      ((and pwild (equal name :SINGLE-CHAR-WILD>)) :JULIUS-GLOB-CHAR-SINGLE)
+                       ;((and pwild (equal name #<SB-IMPL::PATTERN :SINGLE-CHAR-WILD>)) :JULIUS-GLOB-CHAR-SINGLE)
+                      (pwild :JULIUS-GLOB-CHAR-MULT)
+                      (t :JULIUS-GLOB-CHAR-NONE)))
+         )
+    (format t "host      = ~s~&
+               pdev      = ~s~&
+               dir       = ~s~&
+               dir-head  = ~s~&
+               dir-tail  = ~s~&
+               dir-type  = ~s~&
+               name      = ~s~&
+               ptype     = ~s~&
+               pwild     = ~s~&
+               glob-char = ~s~&
+               version   = ~s~&"
+            host
+            pdev
+            dir
+            dir-head
+            dir-tail
+            dir-type            
+            name
+            ptype
+            pwild
+            glob-char
+            version))
+  )
+         
+
 (defun kls (&optional path)
   (let ((tpath (if (knilp path) (kpwd) (kpath path))))
-    (format t "tpath = ~s~%" tpath)
+    (format t "tpath = ~s wild = ~s~%" tpath (wild-pathname-p tpath))
     (directory tpath)
     )
   )
