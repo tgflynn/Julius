@@ -144,23 +144,27 @@
                      ((equal dir-head :RELATIVE) :RELATIVE)
                      ((equal dir-head :ABSOLUTE) :ABSOLUTE)
                      (t :JULIUS-DIR-TYPE-STD)))
+         (is-pat (sb-impl::pattern-p name))
+         (pat-pieces (if is-pat (sb-impl::pattern-pieces name) nil))
          (glob-char (cond
+                      ((and pwild is-pat) (if (equal pat-pieces '(:SINGLE-CHAR-WILD)) :JULIUS-GLOB-CHAR-SINGLE))
                       ((and pwild (equal name :SINGLE-CHAR-WILD>)) :JULIUS-GLOB-CHAR-SINGLE)
-                       ;((and pwild (equal name #<SB-IMPL::PATTERN :SINGLE-CHAR-WILD>)) :JULIUS-GLOB-CHAR-SINGLE)
                       (pwild :JULIUS-GLOB-CHAR-MULT)
                       (t :JULIUS-GLOB-CHAR-NONE)))
          )
-    (format t "host      = ~s~&
-               pdev      = ~s~&
-               dir       = ~s~&
-               dir-head  = ~s~&
-               dir-tail  = ~s~&
-               dir-type  = ~s~&
-               name      = ~s~&
-               ptype     = ~s~&
-               pwild     = ~s~&
-               glob-char = ~s~&
-               version   = ~s~&"
+    (format t "host       = ~s~&
+               pdev       = ~s~&
+               dir        = ~s~&
+               dir-head   = ~s~&
+               dir-tail   = ~s~&
+               dir-type   = ~s~&
+               name       = ~s~&
+               ptype      = ~s~&
+               pwild      = ~s~&
+               is-pat     = ~s~&
+               pat-pieces = ~s~&
+               glob-char  = ~s~&
+               version    = ~s~&"
             host
             pdev
             dir
@@ -170,8 +174,13 @@
             name
             ptype
             pwild
+            is-pat
+            pat-pieces
             glob-char
-            version))
+            version
+            )
+    name
+    )
   )
          
 
