@@ -672,6 +672,15 @@
 (defun keval (form)
   (eval form))
 
+(defun krepl (&optional (input-stream *standard-input*)
+                (output-stream *standard-output*)
+                (error-stream *error-output*))
+  (kwhile (ktrue)
+          (let* ((obj (kread input-stream)))
+            (kprint (keval obj) output-stream))))
+          
+  
+
 (progn
   (setfun "kcore" 10 "Save image" nil )
   (setfun "krand" 11 "Returns a random float" nil )
@@ -689,6 +698,7 @@
   (setfun "kpwd" 22 "Returns current directory path" #'kpwd)
   (setfun "keval" 23 "Evaluates form" #'keval)
   (setfun "kread" 24 "Reads and parses objects from input stream" #'kread)
+  (setfun "krepl" 25 "Implements read-eval-print loop" #'krepl)
   
   (khelp)
   )
