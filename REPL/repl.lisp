@@ -661,8 +661,13 @@
   (eval form))
 
 (defun kprompt (&optional (output-stream *standard-output*))
-  (cl::print "K> " output-stream)
-  (force-output output-stream)
+  (let ((prompt-string (format nil "~a" "K> ")))
+    (format output-stream "~a" prompt-string)
+    ;(cl::print prompt-string output-stream)
+    ;(cl::print #\> output-stream)
+    ;(cl::print #\space output-stream)
+    )
+  (finish-output output-stream)
   )
   
 (defun kprint (object &optional (output-stream *standard-output*))
@@ -683,8 +688,11 @@
                 (output-stream *standard-output*)
                 (error-stream *error-output*))
   (kwhile (ktrue)
-          (let* ((obj (kread input-stream)))
-            (kprint (keval obj) output-stream))))
+          (progn
+            (kprompt output-stream)
+            (let* ((obj (kread input-stream)))
+              (kprint (keval obj) output-stream))
+            (finish-output output-stream))))
           
   
 
