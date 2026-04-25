@@ -508,18 +508,6 @@
 ;;           (format nil "~A> " #\K))))
 ;;   )
 
-(defun kprint (object &optional (output-stream *standard-output*))
-  ;;   ;(declare (sb-ext:disable-package-locks :print))
-  (cl::print object output-stream)
-  (terpri output-stream)
-  (format output-stream "K> ")
-  ;(write #\K :stream output-stream)
-  ;(cl:print #\> output-stream)
-  ;(cl:print #\space output-stream)
-;;   ;(write-string (format nil "~a" object) output-stream)
-;;   ;object
-  )
-
 (defun ktrue ()
   't)
 
@@ -672,6 +660,25 @@
 (defun keval (form)
   (eval form))
 
+(defun kprompt (&optional (output-stream *standard-output*))
+  (cl::print "K> " output-stream)
+  (force-output output-stream)
+  )
+  
+(defun kprint (object &optional (output-stream *standard-output*))
+  ;;   ;(declare (sb-ext:disable-package-locks :print))
+  (let ((obj object))
+    ;(cl:print #\> output-stream)
+    (cl::print object output-stream)
+    (terpri output-stream)
+    (force-output output-stream)
+    obj))
+
+
+  ;(cl:print #\space output-stream)
+;;   ;(write-string (format nil "~a" object) output-stream)
+;;   ;object
+
 (defun krepl (&optional (input-stream *standard-input*)
                 (output-stream *standard-output*)
                 (error-stream *error-output*))
@@ -699,6 +706,7 @@
   (setfun "keval" 23 "Evaluates form" #'keval)
   (setfun "kread" 24 "Reads and parses objects from input stream" #'kread)
   (setfun "krepl" 25 "Implements read-eval-print loop" #'krepl)
+  (setfun "kprompt" 26 "Display prompt" #'kprompt)
   
   (khelp)
   )
