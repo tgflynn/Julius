@@ -120,6 +120,9 @@
 
 ;~10<foo~;bar~>
 
+(defun kpwd ()
+  (truename "."))
+
 (defun khex (arg)
   (let* ((rec (nth 19 *CMDS*))
          (fun #'(lambda (x)
@@ -677,6 +680,7 @@
   
   (setfun "ktime" 20 "Measure execution time" #'ktime)
   (setfun "kprint" 21 "Calls print" #'kprint)
+  (setfun "kpwd" 22 "Returns current directory path" #'kpwd)
   
   (khelp)
   )
