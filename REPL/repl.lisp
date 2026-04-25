@@ -132,7 +132,8 @@
 
 (defun kls (&optional path)
   (let ((tpath (if (knilp path) (kpwd) (kpath path))))
-    tpath
+    (format t "tpath = ~s~%" tpath)
+    (directory tpath)
     )
   )
     
