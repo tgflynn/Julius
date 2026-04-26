@@ -149,16 +149,19 @@
 
 
 ;~10<foo~;bar~>
-
-(defun kpwd ()
-  (truename "."))
-
 (defun kpath (obj)
   (cond
     ((knilp obj) (make-pathname))
     ((stringp obj) (pathname obj))
     ((pathnamep obj) obj)
     (t (kerror (format nil "argument ~s is invalid" obj )))))
+
+(defun kpwd ()
+  (truename "."))
+
+(defun kcd (path)
+  (setf *default-pathname-defaults* (kpath path)))
+
 
 (defun kpath-split (path &optional (path-sep "/"))
   (let* ((name (pathname-name path))
@@ -263,20 +266,26 @@
   )
 
 (defun kmake-pathname (aparts)
-  (make-pathname :host (kassoc-value aparts :host)
-                 :device (kassoc-value aparts :device)
-                 :directory (kassoc-value aparts :dir)
-                 :name (kassoc-value aparts :name)
-                 :type (kassoc-value aparts :type)
-                 :defaults (kassoc-value aparts :pathname-defaults)
-                 :version (kassoc-value aparts :version)
-                 )
+  (let ((default-pathname
+          (make-pathname
+           :host (kassoc-value aparts :host))))
+    
+    (make-pathname :host (kassoc-value aparts :host)
+                   :device (kassoc-value aparts :device)
+                   :directory (kassoc-value aparts :dir)
+                   :name (kassoc-value aparts :name)
+                   :type (kassoc-value aparts :type)
+                   :defaults default-pathname
+                   :version (kassoc-value aparts :version)
+                   )
+    )
   )
 
 (defun kglob (path)
   (let* ((aparts (kpath-split path))
          (pathname (kmake-pathname aparts))
          (path-sep (kassoc-value aparts :path-sep)))
+    (format t "kglob: aparts = ~s~%" aparts)
     (when (knilp (assoc :pwild aparts)) (return-from kglob nil))
     (let* ((glob-char-str (case (kassoc-value aparts :glob-char) 
                             (:JULIUS-GLOB-CHAR-SINGLE "?")
@@ -290,7 +299,7 @@
       (format t "glob-char-str = ~s glob-path = ~s pathname = ~s~%"
               glob-char-str glob-path pathname)
 
-      (directory pathname)
+      ;(directory pathname)
       )
     )
   )
