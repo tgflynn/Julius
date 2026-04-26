@@ -30,18 +30,9 @@
                        ))
 )
 
-(defparameter *CMDS* '(
-                       ( "khelp" 0 "Displays help" nil )
-                       ( "car" 1 "Returns head of list" cl::car )
-                       ( "cdr" 2 "Returns rest of list" cl::cdr )
-                       ( "nth" 3 "Returns nth element of list" cl::nth )
-                       ( "load" 4 "Loads a Lisp source file" cl::load )
-                       ( "getf" 5 "Accesses a place" cl::getf )
-                       ( "setf" 6 "Sets a place to some value" cl::setf )
-                       ( "match" 7 "Matches a string" nil )
-                       ( "do" 8 "do loop" cl::do )
-                       ( "die" 9 "Save image and exit" nil )
-                       ))
+(defparameter *CMDS* '(( nil nil nil nil )))
+
+
 
 
 (defun kerror (x)
@@ -824,6 +815,18 @@
   
 
 (progn
+
+  (setfun "khelp" 0 "Displays help" nil )
+  (setfun "car" 1 "Returns head of list" #'cl::car )
+  (setfun "cdr" 2 "Returns rest of list" #'cl::cdr )
+  (setfun "nth" 3 "Returns nth element of list" #'cl::nth )
+  (setfun "load" 4 "Loads a Lisp source file" #'cl::load )
+  (setfun "getf" 5 "Accesses a place" nil )
+  (setfun "setf" 6 "Sets a place to some value" nil )
+  (setfun "match" 7 "Matches a string" nil )
+  (setfun "do" 8 "do loop" nil )
+  (setfun "die" 9 "Save image and exit" nil )
+  
   (setfun "kcore" 10 "Save image" nil )
   (setfun "krand" 11 "Returns a random float" nil )
   (setfun "kgen" 12 "Generates a single random float" nil )
