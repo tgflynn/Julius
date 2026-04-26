@@ -74,6 +74,45 @@
   )
 )
 
+(defun kpick (lst pred &optional (rlst nil))
+  (let* ((hd (car lst))
+         (tl (cdr lst))
+         (res (cond
+                ((funcall pred hd) hd)
+                (t :KPICK-NO))))
+    (if (not (equal res :KPICK-NO))
+        (setf rlst (cons hd rlst)))
+    (if (knilp tl) rlst
+        (kpick tl pred rlst))
+    ))
+        
+
+(defun khelp-4 (command)
+  (kpick (kcomlist)
+         #'(lambda (x)
+             (equal (car x) command))
+         ))
+
+  
+  ;; (let ((lst (mapcar #'(lambda (x)
+  ;;                        (if (equal command (car x)) x :KPICK-NO))
+  ;;                      (kcomlist))
+  ;;             ))
+  ;;   ;; (kfilter #'(lambda (x)
+  ;;   ;;              (not (equal x :KPICK-NO)))
+  ;;   ;;          lst)
+  ;;   lst
+  ;;   ))
+
+(defun khelp-3 (command)
+  (let* ((rec (member command *CMDS*
+                      :test #'equal :key #'(lambda (x)
+                                             (format t "khelp-3: x = ~s~%" x)
+                                             (car x))
+                      )
+              ))
+    rec))
+
 (defun khelp ()
   (let* ((rec (nth 0 *CMDS*))
          (fun (lambda ()
