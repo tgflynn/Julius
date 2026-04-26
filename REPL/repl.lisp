@@ -225,6 +225,9 @@
       ( :glob-char . ,glob-char )
       ( :version . ,version )
       ( :path-sep . ,path-sep )
+      ( :pathname-defaults . ,(cond
+                                ((equal dir-type :ABSOLUTE) #P"/")
+                                (t (kpwd))) )
       )
     )
   )
@@ -258,20 +261,39 @@
       )
     )
   )
-  
+
+(defun kmake-pathname (aparts)
+  (make-pathname :host (kassoc-value aparts :host)
+                 :device (kassoc-value aparts :device)
+                 :directory (kassoc-value aparts :dir)
+                 :name (kassoc-value aparts :name)
+                 :type (kassoc-value aparts :type)
+                 :defaults (kassoc-value aparts :pathname-defaults)
+                 :version (kassoc-value aparts :version)
+                 )
+  )
+
 (defun kglob (path)
-  (let* ((aparts (kpath-split path)))
+  (let* ((aparts (kpath-split path))
+         (pathname (kmake-pathname aparts))
+         (path-sep (kassoc-value aparts :path-sep)))
     (when (knilp (assoc :pwild aparts)) (return-from kglob nil))
-    ;(format t "kglob: after when glob-char = ~s~&" (kassoc-value aparts :glob-char))
-    (directory
-     (format nil "~a~a"
-             (kdir-abs path)
-             (case (kassoc-value aparts :glob-char) 
-               (:JULIUS-GLOB-CHAR-SINGLE "?")
-               (:JULIUS-GLOB-CHAR-MULT "*")
-               (:JULIUS-GLOB-CHAR-NONE "")
-               (otherwise ""))))
-    ))
+    (let* ((glob-char-str (case (kassoc-value aparts :glob-char) 
+                            (:JULIUS-GLOB-CHAR-SINGLE "?")
+                            (:JULIUS-GLOB-CHAR-MULT "*")
+                            (:JULIUS-GLOB-CHAR-NONE "")
+                            (otherwise "")))
+           (glob-path      (format nil "~a~a"
+                                   (kdir-abs path)
+                                   glob-char-str))
+           )
+      (format t "glob-char-str = ~s glob-path = ~s pathname = ~s~%"
+              glob-char-str glob-path pathname)
+
+      (directory pathname)
+      )
+    )
+  )
          
 (defun kls (&optional path)
   (let ((tpath (if (knilp path) (kpwd) (kpath path))))
