@@ -130,7 +130,7 @@
     ((pathnamep obj) obj)
     (t (kerror (format nil "argument ~s is invalid" obj )))))
 
-(defun kpath-split (path)
+(defun kpath-split (path &optional (path-sep "/"))
   (let* ((name (pathname-name path))
          (dir (pathname-directory path))
          (ptype (pathname-type path))
@@ -194,6 +194,7 @@
       ( :pat-pieces . ,pat-pieces )
       ( :glob-char . ,glob-char )
       ( :version . ,version )
+      ( :path-sep . ,path-sep )
       )
     )
   )
@@ -214,7 +215,20 @@
              path-sep
              (kpath-cat (cdr path-list) path-sep)))
     (t (format nil "~a~a" (car path-list) path-sep))))
-      
+
+(defun kdir-abs (path)
+  (let* ((aparts (kpath-split path))
+         (path-sep (kassoc-value aparts :path-sep))
+         (dir-tail (kassoc-value aparts :dir-tail))
+         (dir-type (kassoc-value aparts :dir-type)))
+    (cond
+      ((equal dir-type :absolute)
+       (format nil "~a~a" path-sep (kpath-cat dir-tail)))
+      (t (format nil "~a~a" (kpwd) (kpath-cat dir-tail)))
+      )
+    )
+  )
+  
 
 (defun kglob (path)
   (let* ((aparts (kpath-split path)))
