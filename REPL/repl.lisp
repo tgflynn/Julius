@@ -229,20 +229,24 @@
     )
   )
   
-
 (defun kglob (path)
   (let* ((aparts (kpath-split path)))
     (when (knilp (assoc :pwild aparts)) (return-from kglob nil))
     (format t "kglob: after when glob-char = ~s~&" (kassoc-value aparts :glob-char))
-
-    
-    
+    (directory
+     (format nil "~a~a"
+             (kdir-abs path)
+             (case (kassoc-value aparts :glob-char) 
+               (:JULIUS-GLOB-CHAR-SINGLE "?")
+               (:JULIUS-GLOB-CHAR-MULT "*")
+               (:JULIUS-GLOB-CHAR-NONE "")
+               (otherwise ""))))
     ))
          
 (defun kls (&optional path)
   (let ((tpath (if (knilp path) (kpwd) (kpath path))))
     (format t "tpath = ~s wild = ~s~%" tpath (wild-pathname-p tpath))
-    (directory tpath)
+    (kglob tpath)
     )
   )
     
