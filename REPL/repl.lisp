@@ -202,6 +202,20 @@
   (let ((item (assoc key alist)))
     (if (knilp item) nil (cdr item))))
 
+(defun kpath-cat (path-list &optional (path-sep "/"))
+  ;; (let* ((lfun #'(lambda (x)
+  ;;                  (format nil "~a~a" x path-sep))))
+  (cond
+    ((knilp path-list) "")
+    ((knilp (car path-list)) "")
+    ((not (knilp (cdr path-list)))
+     (format nil "~a~a~a"
+             (car path-list)
+             path-sep
+             (kpath-cat (cdr path-list) path-sep)))
+    (t (format nil "~a~a" (car path-list) path-sep))))
+      
+
 (defun kglob (path)
   (let* ((aparts (kpath-split path)))
     (when (knilp (assoc :pwild aparts)) (return-from kglob nil))
