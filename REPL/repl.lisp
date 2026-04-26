@@ -185,59 +185,54 @@
                       (pwild :JULIUS-GLOB-CHAR-MULT)
                       (t :JULIUS-GLOB-CHAR-NONE)))
          )
-    ;; (format t "host       = ~s~&
-    ;;            pdev       = ~s~&
-    ;;            dir        = ~s~&
-    ;;            dir-head   = ~s~&
-    ;;            dir-tail   = ~s~&
-    ;;            dir-type   = ~s~&
-    ;;            name       = ~s~&
-    ;;            ptype      = ~s~&
-    ;;            pwild      = ~s~&
-    ;;            is-pat     = ~s~&
-    ;;            pat-pieces = ~s~&
-    ;;            glob-char  = ~s~&
-    ;;            version    = ~s~&"
-    ;;         host
-    ;;         pdev
-    ;;         dir
-    ;;         dir-head
-    ;;         dir-tail
-    ;;         dir-type            
-    ;;         name
-    ;;         ptype
-    ;;         pwild
-    ;;         is-pat
-    ;;         pat-pieces
-    ;;         glob-char
-    ;;         version
-    ;;         )
-    `(
-      ( :host . ,host )
-      ( :pdev . ,pdev )
-      ( :dir . ,dir )
-      ( :name . ,name )
-      ( :dir-head . ,dir-head )
-      ( :dir-tail . ,dir-tail )
-      ( :dir-type . ,dir-type )
-      ( :name . ,name )
-      ( :ptype . ,ptype )
-      ( :pwild . ,pwild )
-      ( :is-pat . ,is-pat )
-      ( :pat-pieces . ,pat-pieces )
-      ( :glob-char . ,glob-char )
-      ( :version . ,version )
-      ( :path-sep . ,path-sep )
-      ( :pathname-defaults . ,(cond
-                                ((equal dir-type :ABSOLUTE) #P"/")
-                                (t (kpwd))) )
-      )
+
+    (let ((aparts
+            `(
+              ( :host . ,host )
+              ( :pdev . ,pdev )
+              ( :dir . ,dir )
+              ( :name . ,name )
+              ( :dir-head . ,dir-head )
+              ( :dir-tail . ,dir-tail )
+              ( :dir-type . ,dir-type )
+              ( :name . ,name )
+              ( :ptype . ,ptype )
+              ( :pwild . ,pwild )
+              ( :is-pat . ,is-pat )
+              ( :pat-pieces . ,pat-pieces )
+              ( :glob-char . ,glob-char )
+              ( :version . ,version )
+              ( :path-sep . ,path-sep )
+              ( :pathname-defaults . ,(cond
+                                        ((equal dir-type :ABSOLUTE) #P"/")
+                                        (t (kpwd))) )
+              )
+            )
+          )
+
+      (format t "dir = ~s name = ~s~&" (kassoc-value aparts :dir)
+              (kassoc-value aparts :name))
+
+      (if (knilp (kassoc-value aparts :name))
+          (kassoc-set-value aparts :name (last (kassoc-value aparts :dir))))
+      
+      aparts)
     )
   )
 
 (defun kassoc-value (alist key)
   (let ((item (assoc key alist)))
     (if (knilp item) nil (cdr item))))
+
+(defun kassoc-set-value (alist key value)
+  ;; (let ((item (kassoc-value alist key)))
+  ;;   (format t "item = ~s~&" item)
+  ;;   (if (knilp item)
+  ;;       (setf item (cons key value))
+  ;;       (rplacd item value))
+  ;;   )
+  (rplacd (assoc key alist) value)
+  )
 
 (defun kpath-cat (path-list &optional (path-sep "/"))
   ;; (let* ((lfun #'(lambda (x)
