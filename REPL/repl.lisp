@@ -1,5 +1,12 @@
 
-(disable-debugger)
+;; (defun my-debugger-hook (&rest args)
+;;   (format t "my-debugger-hook invoked args = ~s~%" args))
+
+;(disable-debugger)
+;(setf *invoke-debugger-hook* my-debugger-hook)
+      
+(setf *evaluator-mode* :interpret)
+;(ignore-errors
 
 (defmacro keffacez (&optional (pas nil) &rest body)
   (declare (optimize
@@ -970,4 +977,4 @@
   (krepl)
   )
 
-
+;) ;; ignore-errors
