@@ -27,12 +27,19 @@
     (dolist (symb exp-list)
       (format t "symb = ~a pkg = ~a~%" symb pkg)
       (let ((int-symb (intern symb pkg)))
-                                        ;(find-symbol (symbol-name symb) :ic)
+        ;(find-symbol (symbol-name symb) :ic)
         (export int-symb pkg))
       )
     )
   )
 (kexport)    
+
+(defmacro klambda-list-test (&whole whole-list &rest args)
+  (format t "klambda-list-test: whole = ~s~%" (list whole-list))
+  (format t "klambda-list-test: args = ~s~%" args)
+  `(uiop:run-program ,@args)
+  )
+
 
 (defun krun (&rest args)
   (uiop:run-program args))
