@@ -5,7 +5,7 @@
 ;(disable-debugger)
 ;(setf *invoke-debugger-hook* my-debugger-hook)
       
-(setf *evaluator-mode* :interpret)
+;(setf *evaluator-mode* :interpret)
 ;(ignore-errors
 
 (defmacro keffacez (&optional (pas nil) &rest body)
@@ -938,24 +938,7 @@
               (kprint (keval obj) output-stream))
             (finish-output output-stream))))
           
-(defun krun (&rest args)
-  (uiop:run-program args))
 
-(defun kapropos (string-designator &optional package external-only)
-  (let ((results '()))
-    (dolist (symbol (apropos-list string-designator package external-only))
-      (setf results (cons
-                     `((
-                        :symbol (string ,symbol)
-                        :package (string ,(symbol-package symbol))
-                        ))
-                     ;(sb-impl::briefly-describe-symbol symbol)
-                     results
-                     )))
-    results
-    )
-  ;(values) ; note: this returns nothing.
-  )
 
 (progn
 
@@ -988,7 +971,7 @@
   (setfun "kread" 24 "Reads and parses objects from input stream" #'kread)
   (setfun "krepl" 25 "Implements read-eval-print loop" #'krepl)
   (setfun "kprompt" 26 "Display prompt" #'kprompt)
-  (setfun "krun" 27 "uiop:run-program" #'krun)
+  ;(setfun "krun" 27 "uiop:run-program" #'krun)
   
   (khelp)
 
