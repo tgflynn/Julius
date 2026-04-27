@@ -1,4 +1,6 @@
 
+(disable-debugger)
+
 (defmacro keffacez (&optional (pas nil) &rest body)
   (declare (optimize
             (safety 0)
@@ -177,6 +179,7 @@
                      ((equal dir-head :RELATIVE) :RELATIVE)
                      ((equal dir-head :ABSOLUTE) :ABSOLUTE)
                      (t :JULIUS-DIR-TYPE-STD)))
+         (path-list nil)
          (is-pat (sb-impl::pattern-p name))
          (pat-pieces (if is-pat (sb-impl::pattern-pieces name) nil))
          (glob-char (cond
@@ -204,6 +207,7 @@
               ( :glob-char . ,glob-char )
               ( :version . ,version )
               ( :path-sep . ,path-sep )
+              ( :path-list . nil )
               ( :pathname-defaults . ,(cond
                                         ((equal dir-type :ABSOLUTE) #P"/")
                                         (t (kpwd))) )
@@ -217,6 +221,16 @@
       (if (knilp (kassoc-value aparts :name))
           (kassoc-set-value aparts :name (last (kassoc-value aparts :dir)))
           (when pwild (kassoc-set-value aparts :is-dir-path t)))
+
+      (let ((path-list `(
+                         ,(if (equal dir-type :ABSOLUTE) "/")
+                         ,dir-tail
+                         ,(if pwild glob-char name)
+                         ,ptype
+                         )))
+        (kassoc-set-value aparts :path-list path-list)
+        )
+      
       aparts)
     )
   )
@@ -247,6 +261,45 @@
              path-sep
              (kpath-cat (cdr path-list) path-sep)))
     (t (format nil "~a~a" (car path-list) path-sep))))
+
+(defun kcat-string (lst &optional (sep ""))
+  (format t "kcat-string: lst = ~s~&" lst)
+  (cond
+    ((knilp lst) "")
+    ((katomp lst) lst)
+    ((knilp (car lst)) "")
+    ((not (knilp (cdr lst)))
+     (format nil "~a~a~a"
+             (car lst)
+             sep
+             (kcat-string (cdr lst) sep)))
+    (t (format nil "~a~a" (car lst) sep))))
+    
+
+(defun kpath-cat (path-list &optional (path-sep "/"))
+  (format t "kpath-cat: path-list = ~s~&" path-list)
+  (when (knilp path-list) (return-from kpath-cat nil))
+  (when (katomp path-list) (return-from kpath-cat path-list))
+  (if (and (knilp (cdr path-list)) (katomp (car path-list)))
+      (return-from kpath-cat (car path-list))
+      (progn
+        (format t "kpath-cat: in progn: path-list = ~s~&" path-list)
+        return-from kpath-cat (kcat-string (car path-list) path-sep))
+      )
+
+  (format t "kpath-cat: before cond: path-list = ~s~&" path-list)
+  (cond
+    ;((knilp path-list) "")
+    ((knilp (car path-list)) "")
+    ((consp (car path-list)) (kpath-cat (car path-list) path-sep))
+    ((not (knilp (cdr path-list)))
+     (format nil "~a~a~a"
+             (kpath-cat (car path-list) path-sep)
+             path-sep
+             (kpath-cat (cdr path-list) path-sep)))
+    (t (format nil "~a~a" (car path-list) path-sep)))
+  )
+
 
 (defun kdir-abs (path)
   (let* ((aparts (kpath-split path))
