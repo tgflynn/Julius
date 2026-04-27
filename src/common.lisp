@@ -13,8 +13,9 @@
 (defun kpack-list-sym-ext (package)
   (let ((sym-list '()))
     (do-external-symbols (symb package)
-      ;(format t "symb = ~s~%" symb)
-      (setf sym-list (cons symb sym-list)))
+      (format t "symb = ~s~%" symb)
+      (setf sym-list (cons (symbol-name symb) sym-list)))
+    (format t "kpack-list-sym-ext sym-list = ~s~%" sym-list)
     sym-list
     )
   )
@@ -22,11 +23,16 @@
 (defun kexport ()
   (let* ((pkg (kpackage))
          (exp-list (kpack-list-sym-ext pkg)))
+    (format t "kexport exp-list = ~s~%~a~%" exp-list exp-list)
     (dolist (symb exp-list)
-      (export symb))
+      (format t "symb = ~a pkg = ~a~%" symb pkg)
+      (let ((int-symb (intern symb pkg)))
+                                        ;(find-symbol (symbol-name symb) :ic)
+        (export int-symb pkg))
+      )
     )
   )
-    
+(kexport)    
 
 (defun krun (&rest args)
   (uiop:run-program args))
@@ -63,4 +69,4 @@
   ;(values) ; note: this returns nothing.
   )
 
-(kexport)
+
