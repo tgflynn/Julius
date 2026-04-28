@@ -10,9 +10,10 @@
                          (:file "macros")
                          (:file "common")
                          ))
-               ;; (:module "REPL"
-               ;;          :components
-               ;;          ((:file "repl")))
+               (:module "REPL"
+                        :depends-on ("src")
+                        :components
+                        ((:file "repl")))
                )
   :description ""
   :in-order-to ((test-op (test-op "julius/tests"))))

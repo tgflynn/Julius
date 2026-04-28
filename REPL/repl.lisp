@@ -1,4 +1,6 @@
 
+(in-package :julius)
+
 ;; (defun my-debugger-hook (&rest args)
 ;;   (format t "my-debugger-hook invoked args = ~s~%" args))
 
@@ -8,17 +10,17 @@
 ;(setf *evaluator-mode* :interpret)
 ;(ignore-errors
 
-(defmacro keffacez (&optional (pas nil) &rest body)
-  (declare (optimize
-            (safety 0)
-            (speed 0)
-            (space 0)
-            (debug 0)
-            (compilation-speed 0)))
-  (declare (muffle-conditions style-warning))
-  (if (equal (eval pas) t)
-      `(progn ,@body)
-      `(progn )))
+;; (defmacro keffacez (&optional (pas nil) &rest body)
+;;   ;; (declare (optimize
+;;   ;;           (safety 0)
+;;   ;;           (speed 0)
+;;   ;;           (space 0)
+;;   ;;           (debug 0)
+;;   ;;           (compilation-speed 0)))
+;;   ;; (declare (muffle-conditions style-warning))
+;;   (if (equal (eval pas) t)
+;;       `(progn ,@body)
+;;       `(progn )))
 
 (keffacez nil
 (defparameter *CMDS* '(
@@ -186,7 +188,7 @@
                      ((equal dir-head :RELATIVE) :RELATIVE)
                      ((equal dir-head :ABSOLUTE) :ABSOLUTE)
                      (t :JULIUS-DIR-TYPE-STD)))
-         (path-list nil)
+         ;(path-list nil)
          (is-pat (sb-impl::pattern-p name))
          (pat-pieces (if is-pat (sb-impl::pattern-pieces name) nil))
          (glob-char (cond
@@ -222,7 +224,7 @@
             )
           )
 
-      (format t "dir = ~s name = ~s~&" (kassoc-value aparts :dir)
+      (format t "dir = ~s name = ~s~%" (kassoc-value aparts :dir)
               (kassoc-value aparts :name))
 
       (if (knilp (kassoc-value aparts :name))
@@ -248,7 +250,7 @@
 
 (defun kassoc-set-value (alist key value)
   ;; (let ((item (kassoc-value alist key)))
-  ;;   (format t "item = ~s~&" item)
+  ;;   (format t "item = ~s~%" item)
   ;;   (if (knilp item)
   ;;       (setf item (cons key value))
   ;;       (rplacd item value))
@@ -256,6 +258,7 @@
   (rplacd (assoc key alist) value)
   )
 
+(keffacez
 (defun kpath-cat (path-list &optional (path-sep "/"))
   ;; (let* ((lfun #'(lambda (x)
   ;;                  (format nil "~a~a" x path-sep))))
@@ -268,9 +271,10 @@
              path-sep
              (kpath-cat (cdr path-list) path-sep)))
     (t (format nil "~a~a" (car path-list) path-sep))))
+)
 
 (defun kcat-string (lst &optional (sep ""))
-  (format t "kcat-string: lst = ~s~&" lst)
+  (format t "kcat-string: lst = ~s~%" lst)
   (cond
     ((knilp lst) "")
     ((katomp lst) lst)
@@ -284,17 +288,28 @@
     
 
 (defun kpath-cat (path-list &optional (path-sep "/"))
-  (format t "kpath-cat: path-list = ~s~&" path-list)
+  (format t "kpath-cat: path-list = ~s~%" path-list)
   (when (knilp path-list) (return-from kpath-cat nil))
   (when (katomp path-list) (return-from kpath-cat path-list))
-  (if (and (knilp (cdr path-list)) (katomp (car path-list)))
-      (return-from kpath-cat (car path-list))
-      (progn
-        (format t "kpath-cat: in progn: path-list = ~s~&" path-list)
-        return-from kpath-cat (kcat-string (car path-list) path-sep))
-      )
 
-  (format t "kpath-cat: before cond: path-list = ~s~&" path-list)
+  (let ((tvar
+          (if (and (knilp (cdr path-list)) (katomp (car path-list)))
+              
+              (car path-list)
+      
+              (let ((ret-str (kcat-string (car path-list) path-sep)))
+                (format t "kpath-cat: in progn: path-list = ~s ret-str=~s~%" path-list ret-str)
+                ret-str
+                )
+              
+              )
+          ))
+    
+    (format t "kpath-cat: before cond: path-list = ~s tvar = ~s~%" path-list tvar)
+    )
+  )
+
+  (keffacez nil
   (cond
     ;((knilp path-list) "")
     ((knilp (car path-list)) "")
@@ -304,7 +319,8 @@
              (kpath-cat (car path-list) path-sep)
              path-sep
              (kpath-cat (cdr path-list) path-sep)))
-    (t (format nil "~a~a" (car path-list) path-sep)))
+    (t (format nil "~a~a" (car path-list) path-sep))
+    )
   )
 
 
@@ -340,14 +356,17 @@
 (defun kglob (path)
   (let* ((aparts (kpath-split path))
          (pathname (kmake-pathname aparts))
-         (path-sep (kassoc-value aparts :path-sep)))
+         ;(path-sep (kassoc-value aparts :path-sep))
+         )
     (format t "kglob: aparts = ~s~%" aparts)
     (when (knilp (assoc :pwild aparts)) (return-from kglob nil))
     (let* ((glob-char-str (case (kassoc-value aparts :glob-char) 
                             (:JULIUS-GLOB-CHAR-SINGLE "?")
                             (:JULIUS-GLOB-CHAR-MULT "*")
                             (:JULIUS-GLOB-CHAR-NONE "")
-                            (otherwise "")))
+                            ;(otherwise "")
+                            )
+                          )
            (glob-path      (format nil "~a~a"
                                    (kdir-abs path)
                                    glob-char-str))
@@ -471,13 +490,14 @@
     s))
 
 (defun kgenseq (len &optional (lst '()))
-  (let ((start 0))
-    ;;(format t "len=~a start=~a lst=~a~%" len start lst)
-    (cond
-      ((and (listp lst) (>= len 1))
-       (kgenseq (- len 1) (cons nil lst)))
-      (t
-       (reverse lst)))))
+  (cond
+    ((and (listp lst) (>= len 1))
+     (kgenseq (- len 1) (cons nil lst)))
+    (t
+     (reverse lst))
+    )
+  )
+
 
 
 (defun kgseq (len start &optional (lst '()))
@@ -795,7 +815,7 @@
 
 (keffacez nil
 (defmacro kexpand (&whole wform &rest args)
-  (declare (muffle-conditions style-warning))
+  ;(declare (muffle-conditions style-warning))
   (format t "wform = ~s~%" wform)
   (let ((hd (car wform))
         (tl (cdr wform)))
@@ -806,13 +826,13 @@
 )
 
 (defmacro kexpand (&whole wform &rest args)
-  (declare (muffle-conditions style-warning))
+  ;(declare (muffle-conditions style-warning))
   (let ((fun (lambda (x)
                (if (equal x 'kexpand)
                    'kexpand-1
                    ;(quote 'kexpand)
                    x))))
-    (format t "wform = ~s~%" wform)
+    (format t "wform = ~s args = ~s~%" wform args)
     (let ((rexpr (kwalk-1 wform fun)))
       (format t "rexpr = ~s~%" rexpr)
       rexpr
@@ -855,7 +875,7 @@
 
 
 (defun setfun (fname num description lfun)
-  (let ((tlimit nil)
+  (let ((tlimit t)
         (tnum 0)
         (done nil))
     (kwhile (progn
@@ -936,10 +956,11 @@
             (kprompt output-stream)
             (let* ((obj (kread input-stream)))
               (kprint (keval obj) output-stream))
+            (finish-output error-stream)
             (finish-output output-stream))))
           
 
-(keffacez t
+(keffacez nil
 (progn
 
   (setfun "khelp" 0 "Displays help" nil )
