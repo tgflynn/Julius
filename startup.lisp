@@ -17,4 +17,6 @@
 
 (asdf:initialize-source-registry *PROJ-ASDF-FILE*)
 
+(asdf:load-system :julius)
+
 ;(require :julius)
