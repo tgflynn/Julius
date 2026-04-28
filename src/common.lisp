@@ -2,7 +2,7 @@
 (defpackage julius
   (:nicknames iulius :IC)
   (:use common-lisp)
-  (:export "krun" "ksym-list" "ksym-find" "ksym-desc" "kapropos")
+  (:export "KRUN" "KSYM-LIST" "KSYM-FIND" "KSYM-DESC" "KAPROPOS")
   )
 
 (in-package :IC)
@@ -35,11 +35,12 @@
       (format t "symb = ~a pkg = ~a~%" symb pkg)
       (let ((int-symb (intern symb pkg)))
         ;(find-symbol (symbol-name symb) :ic)
-        (export int-symb pkg))
+        (export int-symb pkg)
+        )
       )
     )
   )
-(kexport)    
+;(kexport) 
 
 (defmacro klambda-list-test (&whole whole-list &rest args)
   (format t "klambda-list-test: whole = ~s~%" (list whole-list))
