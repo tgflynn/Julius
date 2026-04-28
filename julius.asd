@@ -25,7 +25,8 @@
                "rove")
   :components ((:module "tests"
                 :components
-                ((:file "main"))))
+                ((:file "main")
+                 (:file "repl-tests"))))
   :description "Test system for julius"
   :perform (test-op (op c) (symbol-call :rove :run c))
   ;:perform (test-op (op c) (symbol-call :rove :run-all-tests))
