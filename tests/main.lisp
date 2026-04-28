@@ -7,10 +7,21 @@
 ;; NOTE: To run this test file, execute `(asdf:test-system :julius)' in your Lisp.
 
 (deftest test-target-1
-  (testing "should (= 1 1) to be true"
-    (ok (= 1 1))))
+  (testing "List of tests"
+           (ok (= 1 1))
+           (ok (= 1 (ic::kidentity 1)))
+           )
+  )
+
+(defpackage julius/tests/main-2
+  (:use :cl
+   :julius
+   :rove))
+(in-package :julius/tests/main-2)
+
 
 (deftest test-target-2
   (testing "should (= 1 1) to be true"
     (ok (= 1 (ic::kidentity 1)))))
 
+(run-suite *package*)
