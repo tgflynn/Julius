@@ -27,4 +27,7 @@
                 :components
                 ((:file "main"))))
   :description "Test system for julius"
-  :perform (test-op (op c) (symbol-call :rove :run c)))
+  :perform (test-op (op c) (symbol-call :rove :run c))
+  ;:perform (test-op (op c) (symbol-call :rove :run-all-tests))
+
+  )
