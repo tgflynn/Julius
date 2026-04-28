@@ -1,10 +1,4 @@
 
-(defpackage julius
-  (:nicknames iulius :IC)
-  (:use common-lisp)
-  (:export "KRUN" "KSYM-LIST" "KSYM-FIND" "KSYM-DESC" "KAPROPOS")
-  )
-
 (in-package :IC)
 
 (defun kpackage ()

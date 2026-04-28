@@ -1,3 +1,9 @@
+(defpackage julius
+  (:nicknames iulius :IC)
+  (:use common-lisp)
+  (:export "KEFFACEZ" "KRUN" "KSYM-LIST" "KSYM-FIND" "KSYM-DESC" "KAPROPOS")
+  )
+
 ;; (uiop:define-package julius)
 ;; (in-package #:julius)
 

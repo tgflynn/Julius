@@ -6,8 +6,9 @@
   :components (
                (:module "src"
                         :components
-                        ((:file "common")
-                         (:file "main")
+                        ((:file "main")
+                         (:file "macros")
+                         (:file "common")
                          ))
                ;; (:module "REPL"
                ;;          :components

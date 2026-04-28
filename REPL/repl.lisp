@@ -939,7 +939,7 @@
             (finish-output output-stream))))
           
 
-
+(keffacez t
 (progn
 
   (setfun "khelp" 0 "Displays help" nil )
@@ -977,5 +977,6 @@
 
   (krepl)
   )
+)
 
 ;) ;; ignore-errors
