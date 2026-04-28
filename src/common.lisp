@@ -4,6 +4,9 @@
 (defun kpackage ()
   *package*)
 
+(defun kidentity (x)
+  x)
+
 (defun kpack-list-sym-ext (package)
   (let ((sym-list '()))
     (do-external-symbols (symb package)

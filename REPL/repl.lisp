@@ -49,9 +49,6 @@
 (defun kerror (x)
   (format t "Error: ~s~%" x))
 
-(defun kidentity (x)
-  x)
-
 (defun katomp (x)
   (not (consp x)))
 
