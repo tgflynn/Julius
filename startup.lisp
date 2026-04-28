@@ -1,5 +1,8 @@
 
-(defparameter *PROJ-ASDF* (truename "julius.asd"))
+(defparameter *PROJ-ROOT* (truename "."))
+(defparameter *PROJ-ASDF-FILE* (format nil "~a~a" *PROJ-ROOT* "julius.asd"))
+
+(format t "*PROJ-ASDF-FILE* = ~a~%" *PROJ-ASDF-FILE*)
 
 ;; (let* ((home (user-homedir-pathname))
 ;;        (hlen (length (directory-namestring home)))
@@ -12,6 +15,6 @@
 ;;        )
 ;;   (setf *PROJ-ASDF* project-asdf))
 
-;(asdf:initialize-source-registry *PROJ-ASDF*)
+(asdf:initialize-source-registry *PROJ-ASDF-FILE*)
 
 ;(require :julius)

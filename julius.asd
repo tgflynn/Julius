@@ -6,10 +6,12 @@
   :components (
                (:module "src"
                         :components
-                        ((:file "main")))
-               (:module "REPL"
-                        :components
-                        ((:file "repl")))
+                        ((:file "common")
+                         (:file "main")
+                         ))
+               ;; (:module "REPL"
+               ;;          :components
+               ;;          ((:file "repl")))
                )
   :description ""
   :in-order-to ((test-op (test-op "julius/tests"))))
