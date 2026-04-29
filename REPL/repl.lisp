@@ -499,27 +499,6 @@
       (ksleep 10)
       (format t "res2 = ~a~%" res2))))
 
-
-(defun kload (path)
-  (declare (optimize
-            (safety 0)
-            (speed 0)
-            (space 0)
-            (debug 0)
-            (compilation-speed 0)))
-
-  ;(declaim ((sb-ext::muffle-conditions sb-ext::compiler-note)))
-  (let* ((rec (nth 4 *CMDS*))
-         (fun (nth 3 rec)))
-    (funcall fun path)))
-
-
-        ;; (var
-        ;;       (if (>= (* usec (get-internal-real-time)) (* usec current))
-        ;;           (break-from do nil))))))
-         
-    
-
 (defun kdie ()
   (declare (optimize
             (safety 0)
