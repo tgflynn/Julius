@@ -23,6 +23,11 @@
   (cond ((equal x nil) 't)
         (t nil)))
 
+(defun kunused (sym)
+  "Ignore variable: sym."
+  (declare (ignore sym))
+  )
+
 (defun khead (n lst)
   "Return a list of the first n elements of lst."
   (cond ((or (= n 0) (knilp lst)) nil)

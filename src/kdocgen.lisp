@@ -6,3 +6,7 @@
     (kfile-write-txt txt to-path :overwrite)
     )
   )
+
+(defun kdocgen-parse-md-file (path)
+  (kunused path)
+  )
