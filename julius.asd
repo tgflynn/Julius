@@ -9,6 +9,7 @@
                         ((:file "main")
                          (:file "macros")
                          (:file "common")
+                         (:file "kfiles")
                          ))
                (:module "REPL"
                         :depends-on ("src")
