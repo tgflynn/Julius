@@ -23,4 +23,19 @@
 (defun kfile-read-txt (path)
   "Returns the contents of text file: path."
   (concatenate 'string (kfile-read path)))
-    
+
+(defun kfile-write (seq path &optional (when-there :error))
+  "Writes the contents of sequence seq to file: path."
+  (with-open-file (os path :direction :output :if-exists when-there)
+    (write-sequence seq os)
+    )
+  )
+
+(defun kfile-write-txt (txt path &optional (when-there :error))
+  "Writes the contents of string txt to file: path."
+  (with-open-file (os path :direction :output :if-exists when-there)
+    (write-string txt os)
+    )
+  )
+
+
