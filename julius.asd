@@ -10,6 +10,7 @@
                          (:file "macros")
                          (:file "common")
                          (:file "kfiles")
+                         (:file "kdocgen")
                          ))
                (:module "REPL"
                         :depends-on ("src")
