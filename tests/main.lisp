@@ -6,7 +6,7 @@
 
 ;; NOTE: To run this test file, execute `(asdf:test-system :julius)' in your Lisp.
 
-(deftest test-target-1
+(deftest test-target-main-1
   (testing "List of tests"
            (ok (= 1 1))
            (ok (= 1 (ic::kidentity 1)))
