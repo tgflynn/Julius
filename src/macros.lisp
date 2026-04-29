@@ -2,6 +2,7 @@
 (in-package :IC)
 
 (defmacro keffacez (&optional (pas nil) &rest body)
+  "Macro which removes s-expressions contained in body unless pas is t."
   ;; (declare (optimize
   ;;           (safety 0)
   ;;           (speed 0)
@@ -19,5 +20,19 @@
   (quote (list form)))
 )
 
+(keffacez t
+(defun test-keffacez-1 ()
+(consp '()))
+)
+
+(keffacez nil
+(defun test-keffacez-1 ()
+(consp '()))
+)
+
+(keffacez
+(defun test-keffacez-1 ()
+(consp '()))
+)
 
 
