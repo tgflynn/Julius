@@ -33,3 +33,7 @@
                                     ( #\| :JULIUS-REGX-BAR-VERT )
                                     ( #\- :JULIUS-REGX-MINUS )
                                     ))
+
+(defparameter *JULIUS-REGX-CHAR-CLASSES* '(
+                                           "[:alnum:]"
+                                           ))
