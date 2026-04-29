@@ -9,6 +9,7 @@
                         ((:file "main")
                          (:file "macros")
                          (:file "common")
+                         (:file "kregx")
                          (:file "kfiles")
                          (:file "kdocgen")
                          ))

@@ -8,5 +8,10 @@
   )
 
 (defun kdocgen-parse-md-file (path)
-  (kunused path)
+  "Parses md file: path into an AST implemented by nested lists and returns this tree."
+  (let ((ast '())
+        (txt (kfile-read-txt path)))
+    (kunused txt)
+    ast
+    )
   )
