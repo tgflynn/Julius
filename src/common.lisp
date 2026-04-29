@@ -9,8 +9,10 @@
   "Return x."
   x)
 
-(defun kerror (x)
-  (format t "Error: ~s~%" x))
+(defun kerror (x &optional (throw nil))
+  (format t "Error: ~s~%" x)
+  (when throw (signal x)))
+
 
 (defun katomp (x)
   "Return t if x is an atom (ie. not a cons)."
