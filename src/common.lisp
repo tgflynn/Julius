@@ -18,6 +18,7 @@
     (cond
       ((numberp x) x)
       ((stringp x) (parse-integer (funcall pfun x) :radix 16))
+      ((symbolp x) (kunhex (symbol-name x)))
       (t x)
       )
     )

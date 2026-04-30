@@ -1,6 +1,9 @@
 
 (in-package :IC)
 
+;; (defmacro kmunhexify (x)
+;;   `|,x|)
+
 (defparameter *JULIUS-REGX-TEST-TARGET-1* "test")
 (defparameter *JULIUS-REGX-TEST-LIST-1* '( "test" ))
 (defparameter *JULIUS-REGX-TEST-LIST-2* (list #\t #\* #\. ) )
@@ -51,7 +54,7 @@
                                            ))
 
 (defparameter *JULIUS-REGX-CHAR-DEFINITIONS* (list
-                                              `( "[:alpha:]" (\#00 . \#FF) )  
+                                              `( "[:alpha:]" ((kmunhexify \#00) . (kmunhexify \#FF)) )  
                                               "[:blank:]"
                                               "[:cntrl:]"
                                               "[:digit:]"
