@@ -54,20 +54,50 @@
                                            ))
 
 (defparameter *JULIUS-REGX-CHAR-DEFINITIONS* (list
-                                              `( "[:alpha:]" ("\#00" . "\#FF") )  
-                                              "[:blank:]"
-                                              "[:cntrl:]"
-                                              "[:digit:]"
-                                              "[:graph:]"
-                                              "[:lower:]"
-                                              "[:print:]"
-                                              "[:punct:]"
-                                              "[:space:]"
-                                              "[:non-space:]"
-                                              "[:upper:]"
-                                              "[:xdigit:]"
+                                              `( "[:alnum:]" (("#41" . "#5A") ("#61" . "#7A") ("#30" . "#39") ))
+                                              `( "[:alnum-and-underscore:]"
+                                                (("#41" . "#5A") ("#61" . "#7A") ("#30" . "#39") "#5F" ))
+                                              `( "[:non-word:]"
+                                                (("#41" . "#5A") ("#61" . "#7A") ("#30" . "#39") "#5E" "#5F" ))
+                                              `( "[:alpha:]" ("#00" . "#FF") )
+                                              `( "[:blank:]" ("#20" "#09") )
+                                              `( "[:word-boundaries:]" nil )
+                                              `( "[:non-word-boundaries:]" nil )
+                                              `( "[:cntrl:]" (("#00" . "#1F") "#7F")) ;;; #7F = #O177
+                                              `( "[:digit:]" ("#30" . "#39") )
+                                              `( "[:non-digit:]" nil ) ;;; [^0-9]
+                                              `( "[:graph:]" ("#21" . "#7E") ) ;;; union of [:alnum:] and [:punct:]
+                                              `( "[:lower:]" ("#61" . "#7A") )
+                                              `( "[:print:]" ("#20" . "#7E") ) ;;; union of [:alnum:], [:punct:] and space
+                                              `( "[:punct:]" (
+                                                              "#21"  ; !
+                                                              "#22"  ; #\"
+                                                              "#23"  ; #
+                                                              "#24"  ; $
+                                                              "#25"  ; %
+                                                              "#26"  ; &
+                                                              "#27"  ; '
+                                                              "#28"  ; "("
+                                                              "#29"  ; ")"
+                                                              "#2A"  ; "*"
+                                                              "#2B"  ; "+"
+                                                              "#2C"  ; ","
+                                                              "#2D"  ; "-"
+                                                              "#2E"  ; "."
+                                                              "#2F"  ; "/"
+                                                              "#3A"  ; ":"
+                                                              "#3B"  ; ";"
+                                                              "#3C"  ; "<"
+                                                              "#3D"  ; "="
+                                                              "#3E"  ; ">"
+                                                              "#3F"  ; "?"
+                                                              ) )
                                               ))
 
+(defparameter *JULIUS-REGX-TEST-STRING-1* "! #\" # $ % & ' ( ) * + , - . / : ; < = > ? @ [ \ ] ^ _ ` { | } ~")
+                                        ; (map 'list #'char-code IC::*JULIUS-REGX-TEST-STRING-1*)
+
+(defun char-test (x) (format t "x = ~A (~X) (~D)~%" (code-char x) x x))
 
 (defun kcheck-character-class (c cclass)
   (let ((ccode (char-code c)))
