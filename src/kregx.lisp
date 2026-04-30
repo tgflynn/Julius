@@ -50,6 +50,22 @@
                                            "[:xdigit:]"
                                            ))
 
+(defparameter *JULIUS-REGX-CHAR-DEFINITIONS* (list
+                                              `( "[:alpha:]" (\#00 . \#FF) )  
+                                              "[:blank:]"
+                                              "[:cntrl:]"
+                                              "[:digit:]"
+                                              "[:graph:]"
+                                              "[:lower:]"
+                                              "[:print:]"
+                                              "[:punct:]"
+                                              "[:space:]"
+                                              "[:non-space:]"
+                                              "[:upper:]"
+                                              "[:xdigit:]"
+                                              ))
+
+
 (defun kcheck-character-class (c cclass)
   (let ((ccode (char-code c)))
     (cond

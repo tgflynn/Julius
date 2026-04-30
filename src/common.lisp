@@ -9,6 +9,20 @@
   "Return x. "
   x)
 
+(defun kunhex (x)
+  (let ((pfun (lambda (x)
+                (cond
+                  ((equal (elt x 0) #\#) (subseq x 2))
+                  (t x)
+                  ))))
+    (cond
+      ((numberp x) x)
+      ((stringp x) (parse-integer (funcall pfun x) :radix 16))
+      (t x)
+      )
+    )
+  )
+
 (defun kcond-handler-bind (condition handler)
   "Binds function: handler to condition."
   (let*  ((conditions (list condition))
