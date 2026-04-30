@@ -49,3 +49,10 @@
                                            "[:upper:]"
                                            "[:xdigit:]"
                                            ))
+
+(defun kcheck-character-class (c cclass)
+  (let ((ccode (char-code c)))
+    (cond
+      ((and (>= ccode 0) (<= ccode #X7F) (equal cclass (nth 0 *JULIUS-REGX-CHAR-CLASSES*))) t)
+      (t nil)))
+  )
