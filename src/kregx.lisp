@@ -36,4 +36,16 @@
 
 (defparameter *JULIUS-REGX-CHAR-CLASSES* '(
                                            "[:alnum:]"
+                                           "[:alpha:]"
+                                           "[:blank:]"
+                                           "[:cntrl:]"
+                                           "[:digit:]"
+                                           "[:graph:]"
+                                           "[:lower:]"
+                                           "[:print:]"
+                                           "[:punct:]"
+                                           "[:space:]"
+                                           "[:non-space:]"
+                                           "[:upper:]"
+                                           "[:xdigit:]"
                                            ))
