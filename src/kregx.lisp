@@ -54,7 +54,7 @@
                                            ))
 
 (defparameter *JULIUS-REGX-CHAR-DEFINITIONS* (list
-                                              `( "[:alpha:]" ((kmunhexify \#00) . (kmunhexify \#FF)) )  
+                                              `( "[:alpha:]" ("\#00" . "\#FF") )  
                                               "[:blank:]"
                                               "[:cntrl:]"
                                               "[:digit:]"

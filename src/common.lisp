@@ -12,7 +12,8 @@
 (defun kunhex (x)
   (let ((pfun (lambda (x)
                 (cond
-                  ((equal (elt x 0) #\#) (subseq x 2))
+                  ((equal (elt x 0) #\\) (subseq x 2))
+                  ((equal (elt x 0) #\#) (subseq x 1))
                   (t x)
                   ))))
     (cond
