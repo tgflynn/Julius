@@ -127,3 +127,30 @@
       ((and (>= ccode 0) (<= ccode #X7F) (equal cclass (nth 0 *JULIUS-REGX-CHAR-CLASSES*))) t)
       (t nil)))
   )
+
+(defun kregx-char-class-get-def (str)
+  (let* ((prec nil))
+    (dolist (rec *JULIUS-REGX-CHAR-DEFINITIONS*)
+      (when (string= (car rec) str) (setf prec rec)))
+    prec
+    ))
+   
+(defun kregx-char-class-get-def-ranges (str)
+  (cdr (kregx-char-class-get-def str)))
+
+(defun kregx-char-class-get-def-range (str n)
+  (let* ((ranges (kregx-char-class-get-def-ranges str))
+         (hd (car ranges)))
+    (when (knilp hd) (return-from kregx-char-class-get-def-range nil))
+    (nth n (car ranges))
+    ))
+
+(defun kregx-char-class-match-range (c range)
+  (when (knilp range) (return-from kregx-char-class-match-range nil))
+  (let ((ucode (char-code c)))
+    (and (>= ucode (car range)) (<= ucode (cdr range)))))
+
+(defun kregx-char-class-match-def-range (c str n)
+  (kregx-char-class-match-range
+   c (kregx-char-class-get-def-range str n)))
+                                
