@@ -111,6 +111,9 @@
                                                               #\Return    ; "\r" (13, CR)
                                                               #\Vt        ; "\v" (11, VT)
                                                               ) )
+                                              `( "[:non-space:]" nil )
+                                              `( "[:upper:]" ("#41" . "#5A") )
+                                              `( "[:xdigit:]" (("#41" . "#46") ("#61" . "#66") ("#30" . "#39") ) ) ; Hexadecimal digits 
                                               ))
 
 (defparameter *JULIUS-REGX-TEST-STRING-1* "! #\" # $ % & ' ( ) * + , - . / : ; < = > ? @ [ \ ] ^ _ ` { | } ~")
