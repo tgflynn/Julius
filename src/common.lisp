@@ -27,6 +27,12 @@
     )
   )
 
+(defun klist-head-depth (lst)
+  (when (knilp lst) (return-from klist-head-depth 0))
+  (when (katomp lst) (return-from klist-head-depth 1))
+
+  (+ (klist-head-depth (car lst)) 1))
+
 (keffacez nil
 (defun kunhex (x)
   (let ((pfun (lambda (x)
