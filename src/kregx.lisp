@@ -140,10 +140,22 @@
 
 (defun kregx-char-class-get-def-range (str n)
   (let* ((ranges (kregx-char-class-get-def-ranges str))
+         (rhd (klist-head-depth ranges))
          (hd (car ranges)))
     (when (knilp hd) (return-from kregx-char-class-get-def-range nil))
-    (nth n (car ranges))
-    ))
+    
+    (let ((pranges
+            (cond
+              ((= rhd 0) nil)
+              ((= rhd 1) ranges) ; check for pranges = nill
+              (t (car ranges)))))
+      
+      (when (knilp pranges) (return-from kregx-char-class-get-def-range nil))
+      
+      (nth n pranges)
+      )
+    )
+  )
 
 (defun kregx-char-class-match-range (c range)
   (when (knilp range) (return-from kregx-char-class-match-range nil))
