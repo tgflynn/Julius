@@ -102,12 +102,21 @@
                                                               "#7D"  ; "}"
                                                               "#7E"  ; "~"
                                                               ) )
+                                              `( "[:space:]" ( ;;; 6
+                                                              #\Space    ; " "   (32, SPACE)                
+                                                              #\Tab       ; "\t" (9, HT)
+                                                              #\Linefeed  ; "\n" (10, LF) CHECKED
+                                                              #\Newline   ; "\n" (10, LF) CHECKED
+                                                              #\Page      ; "\f" (12, FF)
+                                                              #\Return    ; "\r" (13, CR)
+                                                              #\Vt        ; "\v" (11, VT)
+                                                              ) )
                                               ))
 
 (defparameter *JULIUS-REGX-TEST-STRING-1* "! #\" # $ % & ' ( ) * + , - . / : ; < = > ? @ [ \ ] ^ _ ` { | } ~")
                                         ; (map 'list #'char-code IC::*JULIUS-REGX-TEST-STRING-1*)
 
-(defun char-test (x) (format t "x = ~A (~X) (~D)~%" (code-char x) x x))
+(defun char-test (x) (format t "x = ~A [~S] (~X) (~D)~%" (code-char x) (code-char x) x x))
 
 (defun kcheck-character-class (c cclass)
   (let ((ccode (char-code c)))
