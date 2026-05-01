@@ -10,6 +10,25 @@
   x)
 
 (defun kunhex (x)
+  (when (not (stringp x)) (return-from kunhex nil))
+  (let ((px (cond
+              ((equal (elt x 0) #\\) (subseq x 2))
+              ((equal (elt x 0) #\#) (subseq x 1))
+              (t x))))
+
+    (let ((res 
+            (cond
+              ((numberp x) x)
+              ((characterp x) (char-code x))
+              (t (parse-integer px :radix 16))
+              )))
+      res
+      )
+    )
+  )
+
+(keffacez nil
+(defun kunhex (x)
   (let ((pfun (lambda (x)
                 (cond
                   ((equal (elt x 0) #\\) (subseq x 2))
@@ -24,6 +43,7 @@
       )
     )
   )
+)
 
 (defun kcond-handler-bind (condition handler)
   "Binds function: handler to condition."

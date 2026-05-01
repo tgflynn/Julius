@@ -54,53 +54,53 @@
                                            ))
 
 (defparameter *JULIUS-REGX-CHAR-DEFINITIONS* (list
-                                              `( "[:alnum:]" (("#41" . "#5A") ("#61" . "#7A") ("#30" . "#39") ))
+                                              `( "[:alnum:]" (("#\41" . "#\5A") ("#\61" . "#\7A") ("#\30" . "#\39") ))
                                               `( "[:alnum-and-underscore:]"
-                                                (("#41" . "#5A") ("#61" . "#7A") ("#30" . "#39") "#5F" ))
+                                                (("#\41" . "#\5A") ("#\61" . "#\7A") ("#\30" . "#\39") "#\5F" ))
                                               `( "[:non-word:]"
-                                                (("#41" . "#5A") ("#61" . "#7A") ("#30" . "#39") "#5E" "#5F" ))
-                                              `( "[:alpha:]" ("#00" . "#FF") )
-                                              `( "[:blank:]" ("#20" "#09") )
+                                                (("#\41" . "#\5A") ("#\61" . "#\7A") ("#\30" . "#\39") "#\5E" "#\5F" ))
+                                              `( "[:alpha:]" ("#\00" . "#\FF") )
+                                              `( "[:blank:]" ("#\20" "#\09") )
                                               `( "[:word-boundaries:]" nil )
                                               `( "[:non-word-boundaries:]" nil )
-                                              `( "[:cntrl:]" (("#00" . "#1F") "#7F")) ;;; #7F = #O177
-                                              `( "[:digit:]" ("#30" . "#39") )
+                                              `( "[:cntrl:]" (("#\00" . "#\1F") "#\7F")) ;;; #7F = #O177
+                                              `( "[:digit:]" ("#\30" . "#\39") )
                                               `( "[:non-digit:]" nil ) ;;; [^0-9]
-                                              `( "[:graph:]" ("#21" . "#7E") ) ;;; union of [:alnum:] and [:punct:]
-                                              `( "[:lower:]" ("#61" . "#7A") )
-                                              `( "[:print:]" ("#20" . "#7E") ) ;;; union of [:alnum:], [:punct:] and space
+                                              `( "[:graph:]" ("#\21" . "#\7E") ) ;;; union of [:alnum:] and [:punct:]
+                                              `( "[:lower:]" ("#\61" . "#\7A") )
+                                              `( "[:print:]" ("#\20" . "#\7E") ) ;;; union of [:alnum:], [:punct:] and space
                                               `( "[:punct:]" (
-                                                              "#21"  ; !
-                                                              "#22"  ; #\"
-                                                              "#23"  ; #
-                                                              "#24"  ; $
-                                                              "#25"  ; %
-                                                              "#26"  ; &
-                                                              "#27"  ; '
-                                                              "#28"  ; "("
-                                                              "#29"  ; ")"
-                                                              "#2A"  ; "*"
-                                                              "#2B"  ; "+"
-                                                              "#2C"  ; ","
-                                                              "#2D"  ; "-"
-                                                              "#2E"  ; "."
-                                                              "#2F"  ; "/"
-                                                              "#3A"  ; ":"
-                                                              "#3B"  ; ";"
-                                                              "#3C"  ; "<"
-                                                              "#3D"  ; "="
-                                                              "#3E"  ; ">"
-                                                              "#3F"  ; "?"
-                                                              "#40"  ; "@"
-                                                              "#5B"  ; "["
-                                                              "#5D"  ; "]"
-                                                              "#5E"  ; "^"
-                                                              "#5F"  ; "_"
-                                                              "#60"  ; "`"
-                                                              "#7B"  ; "{"
-                                                              "#7C"  ; "|"
-                                                              "#7D"  ; "}"
-                                                              "#7E"  ; "~"
+                                                              "#\21"  ; !
+                                                              "#\22"  ; #\\"
+                                                              "#\23"  ; #\
+                                                              "#\24"  ; $
+                                                              "#\25"  ; %
+                                                              "#\26"  ; &
+                                                              "#\27"  ; '
+                                                              "#\28"  ; "("
+                                                              "#\29"  ; ")"
+                                                              "#\2A"  ; "*"
+                                                              "#\2B"  ; "+"
+                                                              "#\2C"  ; ","
+                                                              "#\2D"  ; "-"
+                                                              "#\2E"  ; "."
+                                                              "#\2F"  ; "/"
+                                                              "#\3A"  ; ":"
+                                                              "#\3B"  ; ";"
+                                                              "#\3C"  ; "<"
+                                                              "#\3D"  ; "="
+                                                              "#\3E"  ; ">"
+                                                              "#\3F"  ; "?"
+                                                              "#\40"  ; "@"
+                                                              "#\5B"  ; "["
+                                                              "#\5D"  ; "]"
+                                                              "#\5E"  ; "^"
+                                                              "#\5F"  ; "_"
+                                                              "#\60"  ; "`"
+                                                              "#\7B"  ; "{"
+                                                              "#\7C"  ; "|"
+                                                              "#\7D"  ; "}"
+                                                              "#\7E"  ; "~"
                                                               ) )
                                               `( "[:space:]" ( ;;; 6
                                                               #\Space    ; " "   (32, SPACE)                
@@ -112,8 +112,8 @@
                                                               #\Vt        ; "\v" (11, VT)
                                                               ) )
                                               `( "[:non-space:]" nil )
-                                              `( "[:upper:]" ("#41" . "#5A") )
-                                              `( "[:xdigit:]" (("#41" . "#46") ("#61" . "#66") ("#30" . "#39") ) ) ; Hexadecimal digits 
+                                              `( "[:upper:]" ("#\41" . "#\5A") )
+                                              `( "[:xdigit:]" (("#\41" . "#\46") ("#\61" . "#\66") ("#\30" . "#\39") ) ) ; Hexadecimal digits 
                                               ))
 
 (defparameter *JULIUS-REGX-TEST-STRING-1* "! #\" # $ % & ' ( ) * + , - . / : ; < = > ? @ [ \ ] ^ _ ` { | } ~")
@@ -147,8 +147,11 @@
 
 (defun kregx-char-class-match-range (c range)
   (when (knilp range) (return-from kregx-char-class-match-range nil))
-  (let ((ucode (char-code c)))
-    (and (>= ucode (car range)) (<= ucode (cdr range)))))
+  (let* ((ucode (char-code c))
+         (ucode-1 (kunhex (if (consp range) (car range) range)))
+         (ucode-2 (kunhex (if (consp range) (cdr range) range))))
+    (format t "ucode = ~a ucode-1 = ~a ucode-2 = ~a range = ~s~%" ucode ucode-1 ucode-1 range)
+    (and (>= ucode ucode-1) (<= ucode ucode-2))))
 
 (defun kregx-char-class-match-def-range (c str n)
   (kregx-char-class-match-range
