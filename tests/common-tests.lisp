@@ -5,6 +5,8 @@
 (in-package :julius/tests/common)
 
 (deftest test-target-common-1
+  {let* ((tlst '(1 2 3 :tsym))
+         (texp '(T T T NIL)))
   (testing "List of tests"
            (ok (= 1 (ic::kidentity 1)))
            (ok (= 255 #XFF))
@@ -14,5 +16,7 @@
            (ok (equal t (ic::katomp #\|)))
            (ok (equal t (ic::katomp '())))
            (ok (equal t (ic::katomp "a test string")))
+           (ok (equal t ((equal (ic::kfilter #'(lambda (x) (numberp x))
+                                             tlst) texp))))
            )
   )
