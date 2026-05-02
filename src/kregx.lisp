@@ -160,8 +160,9 @@
 (defun kregx-char-class-match-range (c range)
   (when (knilp range) (return-from kregx-char-class-match-range nil))
   (let* ((ucode (char-code c))
-         (ucode-1 (kunhex (if (consp range) (car range) range)))
-         (ucode-2 (kunhex (if (consp range) (cdr range) range))))
+         (ucode-1 (if (consp range) (cons (char-code (car range)) (char-code (cdr range))) (char-code range)))
+         (ucode-2 (if (consp range) (cons (char-code (car range)) (char-code (cdr range))) (char-code range)))
+         )
     (format t "ucode = ~a ucode-1 = ~a ucode-2 = ~a range = ~s~%" ucode ucode-1 ucode-1 range)
     (and (>= ucode ucode-1) (<= ucode ucode-2))))
 
