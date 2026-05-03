@@ -3,9 +3,8 @@
 
 1.  [Julius](#org704cf33)
     1.  [Description](#orgf2af379)
-    2.  [Usage](#orgaa5b98f)
-    3.  [Installation](#orgcf772b1)
-
+    2.  [Dependencies] (#orgaa5b98f)
+    3.  [Usage](#orgab5b98f) 
 
 <a id="org704cf33"></a>
 
@@ -25,6 +24,8 @@ This is a very preliminary attempt to create a new Lisp dialect.
 
 SBCL and quicklisp
 
+<a id="orgab5b98f"></a>
+
 ## Usage
 
   1. Clone Repository.
@@ -33,9 +34,4 @@ SBCL and quicklisp
   3. * (asdf:load-system :julius). 
 
 
-<a id="orgcf772b1"></a>
-
-## Installation
-
-TBD
 
