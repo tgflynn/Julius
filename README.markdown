@@ -15,7 +15,8 @@
 
 ## Description
 
-This is a very preliminary attempt to create a new Lisp dialect.
+This is a very preliminary attempt to create a new Lisp dialect
+implemented using Common Lisp.
 
 
 <a id="orgaa5b98f"></a>
@@ -30,8 +31,7 @@ SBCL and quicklisp
 
   1. Clone Repository.
   2. cd into julius directory.
-  3. Start sbcl.
-  3. * (asdf:load-system :julius). 
+  3. Start sbcl as follows: sbcl --load startup.lisp.
 
 
 
