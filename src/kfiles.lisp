@@ -38,4 +38,7 @@
     )
   )
 
+(defun kload (path)
+  (kfile-read-txt path)
+  )
 

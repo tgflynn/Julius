@@ -1,3 +1,184 @@
 
 (in-package :IC)
 
+;; (defmacro kmunhexify (x)
+;;   `|,x|)
+
+(defparameter *JULIUS-REGX-TEST-TARGET-1* "test")
+(defparameter *JULIUS-REGX-TEST-LIST-1* '( "test" ))
+(defparameter *JULIUS-REGX-TEST-LIST-2* (list #\t #\* #\. ) )
+;(defparameter *JULIUS-REGX-TEST-LIST-2A* (list |.| ) )
+;(defparameter *JULIUS-REGX-TEST-LIST-2B* (list |*| ) ) ; read as (nil)
+;(defparameter *JULIUS-REGX-TEST-LIST-2C* (list |alkh| ) ) ; variable alkh is unbound
+;(defparameter *JULIUS-REGX-TEST-LIST-3* (list #\t #\* #\. |*| |.| ) )
+;(defparameter *JULIUS-REGX-TEST-LIST-4* (list #\t #\* #\. |.| ) )
+(defparameter *JULIUS-REGX-TEST-CHAR-1* #\A)
+
+
+(defparameter *JULIUS-REGX-CHARS* '(
+                                    ( #\. :JULIUS-REGX-WILD-SINGLE )
+                                    ( #\* :JULIUS-REGX-WILD-MULT )
+                                    ( #\( :JULIUS-REGX-PAREN-OPEN )
+                                    ( #\) :JULIUS-REGX-PAREN-CLOSE )
+                                    ( #\[ :JULIUS-REGX-BRACKET-OPEN )
+                                    ( #\] :JULIUS-REGX-BRACKET-CLOSE )
+                                    ( #\{ :JULIUS-REGX-BRACE-OPEN )
+                                    ( #\} :JULIUS-REGX-BRACE-CLOSE )
+                                    ( #\\ :JULIUS-REGX-SLASH-BACK )
+                                    ( #\/ :JULIUS-REGX-SLASH-FORWARD )
+                                    ( #\: :JULIUS-REGX-COLON )
+                                    ( #\; :JULIUS-REGX-COLON-SEMI )
+                                    ( #\, :JULIUS-REGX-COMMA )
+                                    ( #\^ :JULIUS-REGX-HAT )
+                                    ( #\$ :JULIUS-REGX-DOLLAR )
+                                    ( #\? :JULIUS-REGX-QUESTION )
+                                    ( #\+ :JULIUS-REGX-PLUS )
+                                    ( #\| :JULIUS-REGX-BAR-VERT )
+                                    ( #\- :JULIUS-REGX-MINUS )
+                                    ))
+
+(defparameter *JULIUS-REGX-CHAR-CLASSES* '(
+                                           "[:alnum:]"
+                                           "[:alpha:]"
+                                           "[:blank:]"
+                                           "[:cntrl:]"
+                                           "[:digit:]"
+                                           "[:graph:]"
+                                           "[:lower:]"
+                                           "[:print:]"
+                                           "[:punct:]"
+                                           "[:space:]"
+                                           "[:non-space:]"
+                                           "[:upper:]"
+                                           "[:xdigit:]"
+                                           ))
+
+(defparameter *JULIUS-REGX-CHAR-DEFINITIONS* (list
+                                              `( "[:alnum:]" (("#\41" . "#\5A") ("#\61" . "#\7A") ("#\30" . "#\39") ))
+                                              `( "[:alnum-and-underscore:]"
+                                                (("#\41" . "#\5A") ("#\61" . "#\7A") ("#\30" . "#\39") "#\5F" ))
+                                              `( "[:non-word:]"
+                                                (("#\41" . "#\5A") ("#\61" . "#\7A") ("#\30" . "#\39") "#\5E" "#\5F" ))
+                                              `( "[:alpha:]" ("#\00" . "#\FF") )
+                                              `( "[:blank:]" ("#\20" "#\09") )
+                                              `( "[:word-boundaries:]" nil )
+                                              `( "[:non-word-boundaries:]" nil )
+                                              `( "[:cntrl:]" (("#\00" . "#\1F") "#\7F")) ;;; #7F = #O177
+                                              `( "[:digit:]" ("#\30" . "#\39") )
+                                              `( "[:non-digit:]" nil ) ;;; [^0-9]
+                                              `( "[:graph:]" ("#\21" . "#\7E") ) ;;; union of [:alnum:] and [:punct:]
+                                              `( "[:lower:]" ("#\61" . "#\7A") )
+                                              `( "[:print:]" ("#\20" . "#\7E") ) ;;; union of [:alnum:], [:punct:] and space
+                                              `( "[:punct:]" (
+                                                              "#\21"  ; !
+                                                              "#\22"  ; #\\"
+                                                              "#\23"  ; #\
+                                                              "#\24"  ; $
+                                                              "#\25"  ; %
+                                                              "#\26"  ; &
+                                                              "#\27"  ; '
+                                                              "#\28"  ; "("
+                                                              "#\29"  ; ")"
+                                                              "#\2A"  ; "*"
+                                                              "#\2B"  ; "+"
+                                                              "#\2C"  ; ","
+                                                              "#\2D"  ; "-"
+                                                              "#\2E"  ; "."
+                                                              "#\2F"  ; "/"
+                                                              "#\3A"  ; ":"
+                                                              "#\3B"  ; ";"
+                                                              "#\3C"  ; "<"
+                                                              "#\3D"  ; "="
+                                                              "#\3E"  ; ">"
+                                                              "#\3F"  ; "?"
+                                                              "#\40"  ; "@"
+                                                              "#\5B"  ; "["
+                                                              "#\5D"  ; "]"
+                                                              "#\5E"  ; "^"
+                                                              "#\5F"  ; "_"
+                                                              "#\60"  ; "`"
+                                                              "#\7B"  ; "{"
+                                                              "#\7C"  ; "|"
+                                                              "#\7D"  ; "}"
+                                                              "#\7E"  ; "~"
+                                                              ) )
+                                              `( "[:space:]" ( ;;; 6
+                                                              #\Space    ; " "   (32, SPACE)                
+                                                              #\Tab       ; "\t" (9, HT)
+                                                              #\Linefeed  ; "\n" (10, LF) CHECKED
+                                                              #\Newline   ; "\n" (10, LF) CHECKED
+                                                              #\Page      ; "\f" (12, FF)
+                                                              #\Return    ; "\r" (13, CR)
+                                                              #\Vt        ; "\v" (11, VT)
+                                                              ) )
+                                              `( "[:non-space:]" nil )
+                                              `( "[:upper:]" ("#\41" . "#\5A") )
+                                              `( "[:xdigit:]" (("#\41" . "#\46") ("#\61" . "#\66") ("#\30" . "#\39") ) ) ; Hexadecimal digits 
+                                              ))
+
+(defparameter *JULIUS-REGX-TEST-STRING-1* "! #\" # $ % & ' ( ) * + , - . / : ; < = > ? @ [ \ ] ^ _ ` { | } ~")
+                                        ; (map 'list #'char-code IC::*JULIUS-REGX-TEST-STRING-1*)
+
+(defun char-test (x) (format t "x = ~A [~S] (~X) (~D)~%" (code-char x) (code-char x) x x))
+
+(defun kcheck-character-class (c cclass)
+  (let ((ccode (char-code c)))
+    (cond
+      ((and (>= ccode 0) (<= ccode #X7F) (equal cclass (nth 0 *JULIUS-REGX-CHAR-CLASSES*))) t)
+      (t nil)))
+  )
+
+(defun kregx-char-class-get-def (str)
+  (let* ((prec nil))
+    (dolist (rec *JULIUS-REGX-CHAR-DEFINITIONS*)
+      (when (string= (car rec) str) (setf prec rec)))
+    prec
+    ))
+   
+(defun kregx-char-class-get-def-ranges (str)
+  (cdr (kregx-char-class-get-def str)))
+
+(defun kregx-char-class-get-def-range (str n)
+  (let* ((ranges (kregx-char-class-get-def-ranges str))
+         (rhd (klist-head-depth ranges))
+         (hd (car ranges)))
+    (when (knilp hd) (return-from kregx-char-class-get-def-range nil))
+    
+    (let ((pranges
+            (cond
+              ((= rhd 0) nil)
+              ((= rhd 1) ranges) ; check for pranges = nill
+              (t (car ranges)))))
+      
+      (when (knilp pranges) (return-from kregx-char-class-get-def-range nil))
+      
+      (nth n pranges)
+      )
+    )
+  )
+
+(defun kregx-char-class-match-range (c range)
+  (when (knilp range) (return-from kregx-char-class-match-range nil))
+  (let* (;; (ucode (char-code c))
+         ;; ((fun (lambda (x)
+         ;;           (if (consp x)
+         ;;               (cons (char-code (car x)) (char-code (cdr x)))
+         ;;               (char-code x)))))
+         ;((crange (funcall fun range)))
+         (ucode-1 (if (consp range)
+                      (cons (char-code (car range)) (char-code (cdr range)))
+                      (char-code range)))
+         (ucode-2 (if (consp range)
+                      (cons (char-code (car range)) (char-code (cdr range)))
+                      (char-code range)))
+         )
+    (format t "ucode = ~a ucode-1 = ~a ucode-2 = ~a range = ~s~%" ucode ucode-1 ucode-1 range)
+    (and (>= ucode ucode-1) (<= ucode ucode-2))))
+
+(defun kregx-char-class-match-def-range (c str n)
+  (let ((range (kregx-char-class-get-def-range str n)))
+    (when (knilp range) (return-from kregx-char-class-match-def-range nil))
+    (kregx-char-class-match-range c range)
+    )
+  )
+                                

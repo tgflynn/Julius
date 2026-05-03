@@ -6,21 +6,115 @@
   *package*)
 
 (defun kidentity (x)
-  "Return x."
+  "Return x. "
   x)
+
+(defun kunhex (x)
+  (when (not (stringp x)) (return-from kunhex nil))
+  (let ((px (cond
+              ((equal (elt x 0) #\\) (subseq x 2))
+              ((equal (elt x 0) #\#) (subseq x 1))
+              (t x))))
+
+    (let ((res 
+            (cond
+              ((numberp x) x)
+              ((characterp x) (char-code x))
+              (t (parse-integer px :radix 16))
+              )))
+      res
+      )
+    )
+  )
+
+(defun klist-head-depth (lst)
+  (when (knilp lst) (return-from klist-head-depth 0))
+  (when (katomp lst) (return-from klist-head-depth 1))
+
+  (+ (klist-head-depth (car lst)) 1))
+
+(keffacez nil
+(defun kunhex (x)
+  (let ((pfun (lambda (x)
+                (cond
+                  ((equal (elt x 0) #\\) (subseq x 2))
+                  ((equal (elt x 0) #\#) (subseq x 1))
+                  (t x)
+                  ))))
+    (cond
+      ((numberp x) x)
+      ((stringp x) (parse-integer (funcall pfun x) :radix 16))
+      ((symbolp x) (kunhex (symbol-name x)))
+      (t x)
+      )
+    )
+  )
+)
+
+(defun kcond-handler-bind (condition handler)
+  "Binds function: handler to condition."
+  (let*  ((conditions (list condition))
+          (hfun (lambda (x)
+                  (funcall handler x))))
+    (kunused conditions)
+    (kunused hfun)
+    ;(format t "conditions = ~a type-of conditions = ~a~%" conditions conditions)
+    ;(handler-bind conditions hfun)
+    )
+  )
+
+(defun kcond-handler-bind-test-1 ()
+  ;; (macrolet ((count-down (x) `(do ((counter ,x (1- counter)))
+  ;;                                 ((= counter 0) 'done)
+  ;;                               (when (= counter 1)
+  ;;                                 ;(warn "Almost done")
+  ;;                                 )
+  ;;                               (format t "~&~D~%" counter))))
+    ;(count-down 5)
+    )
+  ;)
+
+;;  (defun ignore-warnings-while-counting (x)
+;;    (handler-bind ((warning #'ignore-warning))
+;;      (count-down x)))
+;; =>  IGNORE-WARNINGS-WHILE-COUNTING
+;;  (defun ignore-warning (condition)
+;;    (declare (ignore condition))
+;;    (muffle-warning))
+;; =>  IGNORE-WARNING
+;;  (ignore-warnings-while-counting 3)
+;; >>  3
+;; >>  2
+;; >>  1
+;; =>  DONE
+
+;; (defun kerror (x &optional (throw nil))
+;;   "Signals condition x unless throw is nil."
+;;   ;(cl::muffle-warnings)
+;;   ;(when throw (signal x))
+  
+;;   (let ((err-msg (format nil "kerror: ~s" x)))
+;;     (if throw
+;;         ;(error err-msg)
+;;         err-msg
+;;         )
+;;     )
+;;   )
 
 (defun kerror (x &optional (throw nil))
   "Signals condition x unless throw is nil."
-
-  (let ((res
-          (if throw
-              (signal x)
-              (format nil "kerror: ~s" x)  
-              )))
-    (format t "res = ~s~%" res)
-    res
+  (kunused throw)
+  ;(cl::muffle-warnings)
+  ;(when throw (signal x))
+  
+  (let ((err-msg (format nil "kerror: ~s" x)))
+    (if throw
+        ;(error err-msg)
+        err-msg
+        )
     )
   )
+
 
 (defun katomp (x)
   "Return t if x is an atom (ie. not a cons)."
