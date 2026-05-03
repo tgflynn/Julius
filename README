@@ -21,9 +21,16 @@ This is a very preliminary attempt to create a new Lisp dialect.
 
 <a id="orgaa5b98f"></a>
 
+## Dependencies
+
+SBCL and quicklisp
+
 ## Usage
 
-TBD
+  1. Clone Repository.
+  2. cd into julius directory.
+  3. Start sbcl.
+  3. * (asdf:load-system :julius). 
 
 
 <a id="orgcf772b1"></a>
