@@ -3,7 +3,7 @@
 
 1.  [Julius](#org704cf33)
     1.  [Description](#orgf2af379)
-    2.  [Dependencies] (#orgaa5b98f)
+    2.  [Dependencies](#orgaa5b98f)
     3.  [Usage](#orgab5b98f) 
 
 <a id="org704cf33"></a>
