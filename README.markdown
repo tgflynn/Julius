@@ -30,7 +30,7 @@ SBCL and quicklisp
 ## Usage
 
   1. Clone Repository.
-  2. cd into julius directory.
+  2. cd into Julius directory.
   3. Start sbcl as follows: sbcl --load startup.lisp.
 
 
