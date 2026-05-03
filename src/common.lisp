@@ -10,21 +10,21 @@
   x)
 
 (defun kunhex (x)
-  (when (not (stringp x)) (return-from kunhex nil))
-  (let ((px (cond
-              ((equal (elt x 0) #\\) (subseq x 2))
-              ((equal (elt x 0) #\#) (subseq x 1))
-              (t x))))
+  ;(when (not (stringp x)) (return-from kunhex nil))
+  ;; (let ((px (cond
+  ;;             ((equal (elt x 0) #\\) (subseq x 2))
+  ;;             ((equal (elt x 0) #\#) (subseq x 1))
+  ;;             (t x))))
 
     (let ((res 
             (cond
               ((numberp x) x)
               ((characterp x) (char-code x))
-              (t (parse-integer px :radix 16))
+              ;(t (parse-integer px :radix 16))
               )))
       res
       )
-    )
+   ; )
   )
 
 (defun klist-head-depth (lst)
